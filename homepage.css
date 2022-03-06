@@ -1,13 +1,15 @@
 
-* {
+body {
     font-family: Georgia, 'Times New Roman', Times, serif;
     background-color: #F7F6F4
 }
 
-li, a, button {
+li, a{
     font-weight: 500;
     font-size: 16px;
     color: #333333;
+    text-decoration: none;
+
 }
 
 header {
@@ -19,6 +21,7 @@ header {
 
 .logo {
     cursor: pointer;
+    width: 20%;
 }
 
 .nav-links {
@@ -34,15 +37,16 @@ header {
     transition: all 0.3s ease 0s;
 }
 
+.nav-links li a:hover {
+    color: #D84727;
+}
+
 button {
-    padding: 9px 25px;
-    background-color: rgba(0,136,169,1);
     border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease 0s;
+    justify-content: center;
+    align-items: center;
 }
 
 button:hover {
-    background-color: rgba(0,136,169,0.8);
+    background-color: rgb(42, 80, 187);
 }
