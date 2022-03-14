@@ -1,11 +1,15 @@
+from email import message
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-app = Flask(__name__)
+from flask_cors import CORS
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8089/customers'
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/customer'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
- 
+
 db = SQLAlchemy(app)
+
+CORS(app)  
  
 class Customers(db.Model):
     __tablename__ = 'customers'
@@ -65,7 +69,7 @@ def find_by_custID(custID):
 
 #create customer
 @app.route("/customers/<string:custID>", methods=['POST'])
-def create_book(custID):
+def create_cust(custID):
  
     if (Customers.query.filter_by(custID=custID).first()):
         return jsonify(
@@ -102,6 +106,76 @@ def create_book(custID):
         } 
     ), 201
 
+# update customer info
+@app.route("/customers/<string:custID>", methods=['PUT'])
+def update_cust(custID):
+    try:
+        cust = Customers.query.filter_by(custID=custID).first()
+        if not cust: 
+            return jsonify(
+                {
+                    "code": 404,
+                    "data": {
+                        "custID": custID
+                    },
+                    "message": "Customer not found."
+                }
+            ), 404
+
+        #update
+        data = request.get_json()
+        if data['custName']:
+            cust.custName = data['custName']
+        if data['custAddress']:
+            cust.custAddress = data['custAddress']
+        if data['custBankAccNo']:
+            cust.custBankAccNo = data['custBankAccNo']
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": cust.json(), 
+                "message": "Successfully updated customer information"
+            }
+        )
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "custID": custID
+                },
+                "message": "An error occurred while updating customer's information. " + str(e)
+            }
+        ), 500
+    
+
+
+# delete customer
+@app.route("/customers/<string:custID>", methods=['DELETE'])
+def delete_cust(custID):
+    cust = Customers.query.filter_by(custID=custID).first()
+    if cust:
+        db.session.delete(cust)
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "custID": custID
+                },
+                "message": "Customer successfully deleted."
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "custID": custID
+            },
+            "message": "Customer not found."
+        }
+    ), 404
  
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
