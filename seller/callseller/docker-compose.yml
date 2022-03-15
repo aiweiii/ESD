@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  #################################
+  # Seller: The seller microservice
+  #################################
+  seller:
+    image: jialequek2020/seller:1.0
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:8889/seller
+    ports:
+      - 5123:5000
+
+  ###############################################
+  # callseller: The test_invoke_http.py program
+  ###############################################
+  # callseller:
+  #   image: jialequek2020/callseller:1.0
+  #   depends_on:
+  #     - seller
+  #   environment:
+  #     sellerURL: http://seller:5000/

@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  docker-mysql:
+    # image: mysql:latest
+    image: mariadb:10.5.8
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=M
+      - MYSQL_USER=springuser
+      - MYSQL_PASSWORD=password
+  go-docker-webapp:
+    # restart: on-failure:100
+    # image: docker-gs-ping
+    image: maars505/go_inventory
+    restart: always
+    depends_on:
+      - docker-mysql
+    ports:
+      - 7070:9090
+    environment:
+      - DATABASE_HOST=docker-mysql
+      - DATABASE_USER=springuser
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=M
+      - DATABASE_PORT=3306
