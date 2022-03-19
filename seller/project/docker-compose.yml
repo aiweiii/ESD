@@ -5,8 +5,8 @@ services:
   #################################
   project-mysql:
       platform: linux/amd64
-      image: mysql
-      # maybe image: mysql:latest
+      image: mysql:latest
+      # maybe image: mysql
       command: --default-authentication-plugin=mysql_native_password
       restart: always
       environment:
@@ -42,7 +42,23 @@ services:
       dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
     ports:
       - 5123:5000
+  #################################
+  # Inventory: The Inventory microservice
+  #################################
+  inventory_webapp:
+    restart: always
+    image: maars505/springinventory:CRUD2
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: inventory
+      DATABASE_PORT: 3306
 
+    ports:
+      - 9090:8080
 # *** commands to test and see if database is inside docker *** #
   # docker exec -it project-project-mysql-1 bash -l
   # mysql -u root -p
