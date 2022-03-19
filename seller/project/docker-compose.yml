@@ -1,0 +1,65 @@
+version: "3.9"
+services:
+  #################################  
+  # MySQL
+  #################################
+  project-mysql:
+      platform: linux/amd64
+      image: mysql:latest
+      # maybe image: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mydb
+          MYSQL_USER: user
+          MYSQL_PASSWORD: user
+
+      volumes: 
+          - ./init/02.sql:/docker-entrypoint-initdb.d/02.sql
+          - ./init/03.sql:/docker-entrypoint-initdb.d/03.sql
+          - ./init/01.sql:/docker-entrypoint-initdb.d/01.sql
+
+      ports:
+        - 3306:3306
+  #################################
+  # Seller: The seller microservice Python
+  #################################
+  seller:
+    build:
+        context: ./
+        dockerfile: seller.Dockerfile
+    image: jialequek2020/seller:1.0
+    restart: always
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: sellers
+      DATABASE_PORT: 3306
+      dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+    ports:
+      - 5123:5000
+  #################################
+  # Inventory: The Inventory microservice JAVA
+  #################################
+  inventory_webapp:
+    restart: always
+    image: maars505/springinventory:CRUD2
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: inventory
+      DATABASE_PORT: 3306
+
+    ports:
+      - 9090:8080
+# *** commands to test and see if database is inside docker *** #
+  # docker exec -it project-project-mysql-1 bash -l
+  # mysql -u root -p
+  # show databases;
