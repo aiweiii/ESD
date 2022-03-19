@@ -23,7 +23,7 @@ services:
       ports:
         - 3306:3306
   #################################
-  # Seller: The seller microservice
+  # Seller: The seller microservice Python
   #################################
   seller:
     build:
@@ -43,7 +43,7 @@ services:
     ports:
       - 5123:5000
   #################################
-  # Inventory: The Inventory microservice
+  # Inventory: The Inventory microservice JAVA
   #################################
   inventory_webapp:
     restart: always
