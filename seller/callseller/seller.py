@@ -68,44 +68,6 @@ def find_by_sellerID(sellerID):
     ), 404
 
 
-# @app.route("/book/<string:isbn13>", methods=['POST'])
-# def create_book(isbn13):
-#     if (Book.query.filter_by(isbn13=isbn13).first()):
-#         return jsonify(
-#             {
-#                 "code": 400,
-#                 "data": {
-#                     "isbn13": isbn13
-#                 },
-#                 "message": "Book already exists."
-#             }
-#         ), 400
-
-#     data = request.get_json()
-#     book = Book(isbn13, **data)
-
-#     try:
-#         db.session.add(book)
-#         db.session.commit()
-#     except:
-#         return jsonify(
-#             {
-#                 "code": 500,
-#                 "data": {
-#                     "isbn13": isbn13
-#                 },
-#                 "message": "An error occurred creating the book."
-#             }
-#         ), 500
-
-#     return jsonify(
-#         {
-#             "code": 201,
-#             "data": book.json()
-#         }
-#     ), 201
-
-
 # @app.route("/book/<string:isbn13>", methods=['PUT'])
 # def update_book(isbn13):
 #     book = Book.query.filter_by(isbn13=isbn13).first()
