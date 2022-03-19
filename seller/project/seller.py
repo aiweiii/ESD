@@ -9,7 +9,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# CREATE TABLE `seller`.`seller` ( `sellerID` VARCHAR(13) NOT NULL AUTO_INCREMENT , `sellerName` VARCHAR(64) NOT NULL , `sellerCtcNo` INT NOT NULL , `sellerBankAccNo` INT NOT NULL , PRIMARY KEY (`sellerID`(13))) ENGINE = InnoDB;
 
 #db.Column(db.Float(precision=2), nullable=False)
 class Seller(db.Model):
@@ -63,7 +62,7 @@ def find_by_sellerID(sellerID):
     return jsonify(
         {
             "code": 404,
-            "message": "Book not found."
+            "message": "Seller does not exist."
         }
     ), 404
 
