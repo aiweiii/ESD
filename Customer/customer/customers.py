@@ -1,15 +1,16 @@
 from email import message
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from os import environ
+# from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/customer'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-CORS(app)  
+# CORS(app)  
  
 class Customers(db.Model):
     __tablename__ = 'customers'
@@ -101,7 +102,7 @@ def create_cust(custID):
  
     return jsonify(
         {
-            "code": 201,
+            "code": 200,
             "data": customer.json()
         } 
     ), 201
@@ -178,4 +179,4 @@ def delete_cust(custID):
     ), 404
  
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
