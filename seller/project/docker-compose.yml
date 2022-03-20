@@ -16,9 +16,10 @@ services:
           MYSQL_PASSWORD: user
 
       volumes: 
-          - ./init/02.sql:/docker-entrypoint-initdb.d/02.sql
-          - ./init/03.sql:/docker-entrypoint-initdb.d/03.sql
-          - ./init/01.sql:/docker-entrypoint-initdb.d/01.sql
+          - ./init/inventory.sql:/docker-entrypoint-initdb.d/inventory.sql
+          - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
+          - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
+          - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
 
       ports:
         - 3306:3306
@@ -41,7 +42,7 @@ services:
       DATABASE_PORT: 3306
       dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
     ports:
-      - 5123:5000
+      - 9191:5100
   #################################
   # Inventory: The Inventory microservice JAVA
   #################################
@@ -60,7 +61,24 @@ services:
     ports:
       - 9090:8080
 
+  #################################
+  # Customer: The Customoer microservice Python
+  #################################
+  customer:
+    image: whatnowbbb/customer:1.0
+    restart: always
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: customers
+      DATABASE_PORT: 3306
+      dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
 
+    ports: 
+    - 9292:5000
 
 
 
@@ -72,3 +90,5 @@ services:
   # docker exec -it project-project-mysql-1 bash -l
   # mysql -u root -p
   # show databases;
+  #        - ./init/cart.sql:/docker-entrypoint-initdb.d/cart.sql
+  #        - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
