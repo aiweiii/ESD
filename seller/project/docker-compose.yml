@@ -59,6 +59,15 @@ services:
 
     ports:
       - 9090:8080
+
+
+
+
+
+
+# cd seller/prject
+# docker compose up
+
 # *** commands to test and see if database is inside docker *** #
   # docker exec -it project-project-mysql-1 bash -l
   # mysql -u root -p
