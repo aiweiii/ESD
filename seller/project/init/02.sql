@@ -52,8 +52,3 @@ ALTER TABLE `order_item`
   ADD CONSTRAINT `FK_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 -- ======================= ORDER END ========================== --
-
-
-
-CREATE DATABASE IF NOT EXISTS `test4`;
-GRANT ALL ON `test4`.* TO 'user'@'%';
