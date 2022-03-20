@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <p id="p1" class="body">The quick brown fox jumps over the lazy dog.</p>
+
+    <p id="p2" class="body">The quick brown fox jumps over the lazy dog.</p>
+    <button id="showButton">Show</button><button id="hideButton">Hide</button>
+</body>
+<script>
+    document.getElementById("showButton").onclick = function() {
+        document.getElementById("p2").style.display = "block";
+    }
+    document.getElementById("hideButton").onclick = function() {
+        document.getElementById("p2").style.display = "none";
+    }
+    
+</script>
+</html>

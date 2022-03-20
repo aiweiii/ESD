@@ -1,0 +1,24 @@
+version: "3.8"
+ 
+services:
+ 
+  #################################
+  # Book: The Book microservice
+  #################################
+  customer:
+    image: whatnowbbb/customer:1.0
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/book
+    ports: 
+    - 5123:5000
+ 
+  ##############################################
+  # callbook: The test_invoke_http.py program
+  ##############################################
+  callcustomer:
+    image: whatnowbbb/callcustomer:1.0
+    depends_on:
+      - customer
+    environment:
+      customerURL: http://customer:5000/customers
