@@ -16,9 +16,10 @@ services:
           MYSQL_PASSWORD: user
 
       volumes: 
-          - ./init/02.sql:/docker-entrypoint-initdb.d/02.sql
-          - ./init/03.sql:/docker-entrypoint-initdb.d/03.sql
-          - ./init/01.sql:/docker-entrypoint-initdb.d/01.sql
+          - ./init/Invent_Cart.sql:/docker-entrypoint-initdb.d/Invent_Cart.sql
+          - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
+          - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
+          - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
 
       ports:
         - 3306:3306
@@ -41,7 +42,29 @@ services:
       DATABASE_PORT: 3306
       dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
     ports:
-      - 5123:5000
+      - 9191:5100
+  #################################
+  # Customer: The Customoer microservice Python
+  #################################
+  customer:  
+    build:
+        context: ./
+        dockerfile: customer.Dockerfile
+  
+    image: jialequek2020/customer:1.0
+    restart: always
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: customers
+      DATABASE_PORT: 3306
+      dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+
+    ports: 
+    - 9292:5000
   #################################
   # Inventory: The Inventory microservice JAVA
   #################################
@@ -59,7 +82,25 @@ services:
 
     ports:
       - 9090:8080
-
+  #################################
+  # Cart: The Cart microservice JAVA
+  #################################
+  cart_webapp:
+    restart: always
+    #    image: pokemon:0.0.1-SNAPSHOT
+    image: mon2020/cartapp:latest2
+    depends_on:
+      - project-mysql
+    ports:
+      - 9393:8080
+    environment:
+      - DATABASE_HOST=project-mysql
+      - DATABASE_USER=user
+      - DATABASE_PASSWORD=user
+      - DATABASE_NAME=cart
+      - DATABASE_PORT=3306
+    mem_limit: 750m
+    mem_reservation: 700m
 
 
 
@@ -72,3 +113,5 @@ services:
   # docker exec -it project-project-mysql-1 bash -l
   # mysql -u root -p
   # show databases;
+  #        - ./init/cart.sql:/docker-entrypoint-initdb.d/cart.sql
+  #        - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql

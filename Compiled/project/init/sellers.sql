@@ -19,3 +19,4 @@ INSERT INTO `seller` (`sellerID`, `sellerName`, `sellerCtcNo`, `sellerBankAccNo`
 ('1', 'Cindy', '98989898', '774777773');
 --
 -- ======================= SELLER END ========================== --
+
