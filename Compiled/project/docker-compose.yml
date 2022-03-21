@@ -16,7 +16,7 @@ services:
           MYSQL_PASSWORD: user
 
       volumes: 
-          - ./init/inventory.sql:/docker-entrypoint-initdb.d/inventory.sql
+          - ./init/Invent_Cart.sql:/docker-entrypoint-initdb.d/Invent_Cart.sql
           - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
           - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
           - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
@@ -44,6 +44,28 @@ services:
     ports:
       - 9191:5100
   #################################
+  # Customer: The Customoer microservice Python
+  #################################
+  customer:  
+    build:
+        context: ./
+        dockerfile: customer.Dockerfile
+  
+    image: jialequek2020/customer:1.0
+    restart: always
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: customers
+      DATABASE_PORT: 3306
+      dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+
+    ports: 
+    - 9292:5000
+  #################################
   # Inventory: The Inventory microservice JAVA
   #################################
   inventory_webapp:
@@ -60,25 +82,26 @@ services:
 
     ports:
       - 9090:8080
-
   #################################
-  # Customer: The Customoer microservice Python
+  # Cart: The Cart microservice JAVA
   #################################
-  customer:
-    image: whatnowbbb/customer:1.0
+  cart_webapp:
     restart: always
+    #    image: pokemon:0.0.1-SNAPSHOT
+    image: mon2020/cartapp:latest2
     depends_on:
       - project-mysql
+    ports:
+      - 9393:8080
     environment:
-      DATABASE_HOST: project-mysql
-      DATABASE_USER: user
-      DATABASE_PASSWORD: user
-      DATABASE_NAME: customers
-      DATABASE_PORT: 3306
-      dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+      - DATABASE_HOST=project-mysql
+      - DATABASE_USER=user
+      - DATABASE_PASSWORD=user
+      - DATABASE_NAME=cart
+      - DATABASE_PORT=3306
+    mem_limit: 750m
+    mem_reservation: 700m
 
-    ports: 
-    - 9292:5000
 
 
 
