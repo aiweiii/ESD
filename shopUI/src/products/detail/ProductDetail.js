@@ -16,7 +16,6 @@ function ProductDetail() {
 
   const [data,setDate] = useState([])
 
-
   useEffect(() => {
     axios.get("https://jsonplaceholder.typicode.com/users")
     .then(res => {
