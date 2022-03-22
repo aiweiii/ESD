@@ -79,7 +79,8 @@ services:
       DATABASE_PASSWORD: user
       DATABASE_NAME: inventory
       DATABASE_PORT: 3306
-
+    mem_limit: 750m
+    mem_reservation: 700m
     ports:
       - 9090:8080
   #################################
@@ -91,16 +92,18 @@ services:
     image: mon2020/cartapp:latest2
     depends_on:
       - project-mysql
-    
+
     environment:
       - DATABASE_HOST=project-mysql
       - DATABASE_USER=user
       - DATABASE_PASSWORD=user
       - DATABASE_NAME=cart
       - DATABASE_PORT=3306
+    mem_limit: 750m
+    mem_reservation: 700m
+
     ports:
       - 9393:8080
-
 
 
 
