@@ -7,7 +7,7 @@ services:
     image: mariadb:10.5.8
     environment:
       - MYSQL_ROOT_PASSWORD=Ilovespring!
-      # - MYSQL_DATABASE=inventory
+      - MYSQL_DATABASE=inventory
       - MYSQL_USER=user
       - MYSQL_PASSWORD=Ilovespring!
   #    mem_limit: 512m
@@ -19,7 +19,7 @@ services:
     depends_on:
       - docker-mysql
     ports:
-      - 9090:8080
+      - 7070:8080
     environment:
       - DATABASE_HOST=docker-mysql
       - DATABASE_USER=user
@@ -29,19 +29,21 @@ services:
     mem_limit: 750m
     mem_reservation: 700m
 
-  seller:
-    image: jialequek2020/seller:1.0
+  inventory_webapp2:
     restart: always
-    # environment:
-    #   dbURL: mysql+mysqlconnector://is213@host.docker.internal:8889/seller
+    #    image: pokemon:0.0.1-SNAPSHOT
+    image: maars505/springinventory:CRUD2
+    depends_on:
+      - docker-mysql
+    ports:
+      - 9090:8080
     environment:
       - DATABASE_HOST=docker-mysql
       - DATABASE_USER=user
       - DATABASE_PASSWORD=Ilovespring!
-      - DATABASE_NAME=seller
+      - DATABASE_NAME=inventory2
       - DATABASE_PORT=3306
-    ports:
-      - 5123:5000
-
+    mem_limit: 750m
+    mem_reservation: 700m
 
 
