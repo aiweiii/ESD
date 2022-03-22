@@ -44,9 +44,9 @@ services:
     ports:
       - 9191:5100
   #################################
-  # Customer: The Customoer microservice Python
+  # Customer: The Customer microservice Python
   #################################
-  customer:  
+  customer:
     build:
         context: ./
         dockerfile: customer.Dockerfile
@@ -63,14 +63,14 @@ services:
       DATABASE_PORT: 3306
       dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
 
-    ports: 
+    ports:
     - 9292:5000
   #################################
   # Inventory: The Inventory microservice JAVA
   #################################
   inventory_webapp:
     restart: always
-    image: maars505/springinventory:CRUD2
+    image: maars505/springinventory:CORS_CRUD
     depends_on:
       - project-mysql
     environment:

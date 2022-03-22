@@ -77,7 +77,7 @@ function Header() {
           <div className="d-inline-block d-lg-none">
             <button type="button" className="btn btn-outline-dark">
               <FontAwesomeIcon icon={["fas", "shopping-cart"]} />
-              <span className="ms-3 badge rounded-pill bg-dark">HELOOOOOOOOOOOOOOOO</span>
+              <span className="ms-3 badge rounded-pill bg-dark"></span>
             </button>
             <button className="navbar-toggler p-0 border-0 ms-3" type="button" onClick={toggleDrawer}>
               <span className="navbar-toggler-icon"></span>

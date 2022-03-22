@@ -14,8 +14,8 @@ function FeatureProduct({item}) {
           src={Image}
         />
         <div className="card-body">
-          <h5 className="card-title text-center">{item.name}</h5>
-          <p className="card-text text-center text-muted">$ {item.id}</p>
+          <h5 className="card-title text-center">{item.productName}</h5>
+          <p className="card-text text-center text-muted">$ {item.itemPrice}</p>
           <div className="d-grid gap-2">
             <Router>
               <Route path="/products/:id">

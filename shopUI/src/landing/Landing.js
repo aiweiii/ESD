@@ -29,7 +29,7 @@ function Landing() {
   const [items,setItem] = useState([])
 
   useEffect(() => {
-    axios.get("https://jsonplaceholder.typicode.com/users")
+    axios.get("http://127.0.0.1:9090/items")
     .then(res => {
       console.log(res.data)
       setItem(res.data)
