@@ -38,50 +38,6 @@ function Landing() {
   },[])
 
 
-//   let data = [
-//     {
-//         "productName": "ORANGE",
-//         "quantity": 20,
-//         "price": 80,
-//         "sellerId": 1,
-//         "id": 1
-//     },
-//     {
-//         "productName": "PINEAPPLE",
-//         "quantity": 50,
-//         "price": 70,
-//         "sellerId": 1,
-//         "id": 2
-//     },
-//     {
-//         "productName": "APPLE",
-//         "quantity": 30,
-//         "price": 60,
-//         "sellerId": 2,
-//         "id": 3
-//     },
-//     {
-//         "productName": "STRAWBERRY",
-//         "quantity": 17,
-//         "price": 50,
-//         "sellerId": 2,
-//         "id": 4
-//     },
-//     {
-//         "productName": "BLUEBERRY",
-//         "quantity": 30,
-//         "price": 40,
-//         "sellerId": 2,
-//         "id": 5
-//     },
-//     {
-//         "productName": "WATERMELON",
-//         "quantity": 30,
-//         "price": 30,
-//         "sellerId": 2,
-//         "id": 6
-//     }
-// ]
   return (
     <>
       <ScrollToTopOnMount />

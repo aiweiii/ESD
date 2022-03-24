@@ -19,7 +19,7 @@ function FeatureProduct({item}) {
           <div className="d-grid gap-2">
             <Router>
               <Route path="/products/:id">
-                <ProductDetail item={{item}} />
+                <ProductDetail item={item} />
               </Route>
             </Router>
 
