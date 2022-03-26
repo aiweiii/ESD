@@ -9,23 +9,6 @@ import { useEffect, useState } from "react";
 
 function Landing() {
 
-  // var config = {
-  //   method: 'get',
-  //   // url: 'http://localhost:7070/items',
-  //   url: 'https://jsonplaceholder.typicode.com/todos',
-  //   headers: { }
-  // };
-
-  // axios(config)
-  // .then(function (response) {
-  //   console.log(JSON.stringify(response.data));
-  //   const todos = response.data;
-
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  // });
-
   const [items,setItem] = useState([])
 
   useEffect(() => {

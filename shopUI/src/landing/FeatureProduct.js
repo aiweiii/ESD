@@ -1,8 +1,9 @@
 import Image from "../nillkin-case.webp";
-import { Link, BrowserRouter as Router, Route } from "react-router-dom";
+import { Link, BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ProductDetail from "../products/detail/ProductDetail";
 
 function FeatureProduct({item}) {
+  console.log("item",item)
 
   return (
     <div className="col">
@@ -17,13 +18,14 @@ function FeatureProduct({item}) {
           <h5 className="card-title text-center">{item.productName}</h5>
           <p className="card-text text-center text-muted">$ {item.itemPrice}</p>
           <div className="d-grid gap-2">
-            <Router>
+            <Switch>
               <Route path="/products/:id">
-                <ProductDetail item={item} />
+                <ProductDetail sth={1} />
               </Route>
-            </Router>
+            </Switch>
 
             <Link to={`/products/${item.id}`} className="btn btn-outline-dark" replace>Details</Link>
+            {/* I think the problem is within the ROUTE and LINK!!! */}
 
           </div>
         </div>

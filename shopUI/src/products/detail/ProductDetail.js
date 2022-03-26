@@ -12,14 +12,16 @@ const iconPath =
   "M18.571 7.221c0 0.201-0.145 0.391-0.29 0.536l-4.051 3.951 0.96 5.58c0.011 0.078 0.011 0.145 0.011 0.223 0 0.29-0.134 0.558-0.458 0.558-0.156 0-0.313-0.056-0.446-0.134l-5.011-2.634-5.011 2.634c-0.145 0.078-0.29 0.134-0.446 0.134-0.324 0-0.469-0.268-0.469-0.558 0-0.078 0.011-0.145 0.022-0.223l0.96-5.58-4.063-3.951c-0.134-0.145-0.279-0.335-0.279-0.536 0-0.335 0.346-0.469 0.625-0.513l5.603-0.815 2.511-5.078c0.1-0.212 0.29-0.458 0.547-0.458s0.446 0.246 0.547 0.458l2.511 5.078 5.603 0.815c0.268 0.045 0.625 0.179 0.625 0.513z";
 
 
-function ProductDetail() {
+function ProductDetail(props) {
 
-  const [data,setDate] = useState([])
+  console.log(props.sth)
+
+  const [items,setDate] = useState([])
 
   useEffect(() => {
-    axios.get("https://jsonplaceholder.typicode.com/users")
+    axios.get("http://127.0.0.1:9090/items")
     .then(res => {
-      console.log(res.data)
+      // console.log(res.data)
       setDate(res.data)
     })
     .catch(err => console.log(err))
@@ -28,22 +30,23 @@ function ProductDetail() {
   function changeRating(newRating) {}
 
 
-  // const itemName = data.filter((data) => data.id === 1).map((data, index) => {
-  //   return (
-  //     data.name
-  //   )})
+  const itemName = items.filter((item) => item.id === props.sth).map((item, index) => {
+    console.log("hi")
+    return (
+      item.productName
+    )})
 
-  // const itemPrice = data.filter((data) => data.id === 1).map((data, index) => {
+  // const itemPrice = items.filter((item) => data.id === 1).map((data, index) => {
   //   return (
   //     data.id
   //   )})
 
-  // const sellerName = data.filter((data) => data.id === 1).map((data, index) => {
+  // const sellerName = items.filter((item) => data.id === 1).map((data, index) => {
   //   return (
   //     data.username
   //   )})
 
-  // const itemDescription = data.filter((data) => data.id === 1).map((data, index) => {
+  // const itemDescription = items.filter((item) => data.id === 1).map((data, index) => {
   //   return (
   //     data.company.catchPhrase
   //   )})
@@ -60,7 +63,7 @@ function ProductDetail() {
               All Products
             </Link>
           </li>
-          <li className="breadcrumb-item active" aria-current="page">{item.productName}</li>
+          <li className="breadcrumb-item active" aria-current="page">{itemName}</li>
         </ol>
       </nav>
       <div className="row mb-4">
