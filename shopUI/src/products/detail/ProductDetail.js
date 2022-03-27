@@ -11,44 +11,47 @@ import CustomizedSnackbars from "./SnackBar";
 const iconPath =
   "M18.571 7.221c0 0.201-0.145 0.391-0.29 0.536l-4.051 3.951 0.96 5.58c0.011 0.078 0.011 0.145 0.011 0.223 0 0.29-0.134 0.558-0.458 0.558-0.156 0-0.313-0.056-0.446-0.134l-5.011-2.634-5.011 2.634c-0.145 0.078-0.29 0.134-0.446 0.134-0.324 0-0.469-0.268-0.469-0.558 0-0.078 0.011-0.145 0.022-0.223l0.96-5.58-4.063-3.951c-0.134-0.145-0.279-0.335-0.279-0.536 0-0.335 0.346-0.469 0.625-0.513l5.603-0.815 2.511-5.078c0.1-0.212 0.29-0.458 0.547-0.458s0.446 0.246 0.547 0.458l2.511 5.078 5.603 0.815c0.268 0.045 0.625 0.179 0.625 0.513z";
 
+function ProductDetail() {
 
-function ProductDetail(props) {
+  const id = useParams();
 
-  console.log(props.sth)
-
-  const [items,setDate] = useState([])
+  const [items,setItem] = useState([])
 
   useEffect(() => {
     axios.get("http://127.0.0.1:9090/items")
     .then(res => {
       // console.log(res.data)
-      setDate(res.data)
+      setItem(res.data)
     })
     .catch(err => console.log(err))
   },[])
 
   function changeRating(newRating) {}
 
-
-  const itemName = items.filter((item) => item.id === props.sth).map((item, index) => {
-    console.log("hi")
+  const productName = items.filter((item) => item.id == id.slug).map((item, index) => {
     return (
       item.productName
     )})
 
-  // const itemPrice = items.filter((item) => data.id === 1).map((data, index) => {
-  //   return (
-  //     data.id
-  //   )})
+  const quantity = items.filter((item) => item.id == id.slug).map((item, index) => {
+    return (
+      item.quantity
+    )})
 
-  // const sellerName = items.filter((item) => data.id === 1).map((data, index) => {
-  //   return (
-  //     data.username
-  //   )})
 
-  // const itemDescription = items.filter((item) => data.id === 1).map((data, index) => {
+  const sellerId = items.filter((item) => item.id == id.slug).map((item, index) => {
+    return (
+      item.sellerId
+    )})
+
+  const itemPrice = items.filter((item) => item.id == id.slug).map((item, index) => {
+    return (
+      item.itemPrice
+    )})
+
+  // const description = items.filter((item) => data.id == id.slug).map((data, index) => {
   //   return (
-  //     data.company.catchPhrase
+  //     item.description
   //   )})
 
 
@@ -63,14 +66,14 @@ function ProductDetail(props) {
               All Products
             </Link>
           </li>
-          <li className="breadcrumb-item active" aria-current="page">{itemName}</li>
+          <li className="breadcrumb-item active" aria-current="page">{productName}</li>
         </ol>
       </nav>
       <div className="row mb-4">
         <div className="d-none d-lg-block col-lg-1">
           <div className="image-vertical-scroller">
             <div className="d-flex flex-column">
-              {Array.from({ length: 10 }, (_, i) => {
+              {Array.from({ length: 3 }, (_, i) => {
                 let selected = i !== 1 ? "opacity-6" : "";
                 return (
                   <a key={i} href="!#">
@@ -95,42 +98,19 @@ function ProductDetail(props) {
               />
             </div>
           </div>
-
-          {/* <div className="row mt-2">
-            <div className="col-12">
-              <div
-                className="d-flex flex-nowrap"
-                style={{ overflowX: "scroll" }}
-              >
-                {Array.from({ length: 8 }, (_, i) => {
-                  return (
-                    <a key={i} href="!#">
-                      <img
-                        className="cover rounded mb-2 me-2"
-                        width="70"
-                        height="70"
-                        alt=""
-                        src={Image}
-                      />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          </div> */}
         </div>
 
         <div className="col-lg-5">
           <div className="d-flex flex-column h-100">
-            <h2 className="mb-1">NAME</h2>
-            <h4 className="text-muted mb-4">PRICE</h4>
+            <h2 className="mb-1">{productName}</h2>
+            <h4 className="text-muted mb-4">SGD {itemPrice}</h4>
 
             <div className="row g-3 mb-4">
               <div className="col">
                 {/* <button className="btn btn-outline-dark py-2 w-100">
                   Add to cart
                 </button> */}
-                <CustomizedSnackbars/>
+                <CustomizedSnackbars id={id.slug} />
               </div>
               {/* <div className="col">
                 <button className="btn btn-dark py-2 w-100">Buy now</button>
@@ -141,10 +121,10 @@ function ProductDetail(props) {
             <hr />
             <dl className="row">
               <dt className="col-sm-4">Item ID</dt>
-              <dd className="col-sm-8 mb-3">ID SHOULD APPEAR HERE</dd>
+              <dd className="col-sm-8 mb-3">{id.slug}</dd>
 
-              <dt className="col-sm-4">Seller</dt>
-              <dd className="col-sm-8 mb-3"> SELLER NAME</dd>
+              <dt className="col-sm-4">Seller ID</dt>
+              <dd className="col-sm-8 mb-3">{sellerId}</dd>
 
               <dt className="col-sm-4">Status</dt>
               <dd className="col-sm-8 mb-3">Instock</dd>

@@ -7,14 +7,13 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 
 
-function Landing() {
+function Landing({doClick}) {
 
   const [items,setItem] = useState([])
 
   useEffect(() => {
     axios.get("http://127.0.0.1:9090/items")
     .then(res => {
-      console.log(res.data)
       setItem(res.data)
     })
     .catch(err => console.log(err))
@@ -42,7 +41,7 @@ function Landing() {
           {
             items.map((item, index) => {
               return(
-                <FeatureProduct item={item} key={index} />
+                <FeatureProduct item={item} key={index} doClick={doClick}/>
               )
             })
           }
