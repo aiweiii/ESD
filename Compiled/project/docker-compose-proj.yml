@@ -1,4 +1,7 @@
 version: "3.9"
+networks:
+  proj-net:
+    driver: bridge
 services:
   #################################  
   # MySQL
@@ -7,22 +10,22 @@ services:
       platform: linux/amd64
       image: mysql:latest
       # maybe image: mysql
-      command: --default-authentication-plugin=mysql_native_password
       restart: always
+      command: --default-authentication-plugin=mysql_native_password
       environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: mydb
           MYSQL_USER: user
           MYSQL_PASSWORD: user
-
       volumes: 
           - ./init/Invent_Cart.sql:/docker-entrypoint-initdb.d/Invent_Cart.sql
           - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
           - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
           - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
-
       ports:
         - 3306:3306
+      networks:
+        - proj-net
   #################################
   # Seller: The seller microservice Python
   #################################
@@ -31,7 +34,6 @@ services:
         context: ./
         dockerfile: seller.Dockerfile
     image: jialequek2020/seller:1.0
-    restart: always
     depends_on:
       - project-mysql
     environment:
@@ -41,8 +43,11 @@ services:
       DATABASE_NAME: sellers
       DATABASE_PORT: 3306
       dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+      sellerURL: http://seller:9191/sellers
     ports:
       - 9191:5100
+    networks:
+      - proj-net
   #################################
   # Customer: The Customer microservice Python
   #################################
@@ -50,9 +55,7 @@ services:
     build:
         context: ./
         dockerfile: customer.Dockerfile
-  
     image: jialequek2020/customer:1.0
-    restart: always
     depends_on:
       - project-mysql
     environment:
@@ -62,14 +65,14 @@ services:
       DATABASE_NAME: customers
       DATABASE_PORT: 3306
       dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
-
     ports:
-    - 9292:5000
+      - 9292:5000
+    networks:
+      - proj-net
   #################################
   # Inventory: The Inventory microservice JAVA
   #################################
   inventory_webapp:
-    restart: always
     image: maars505/springinventory:CORS_CRUD
     depends_on:
       - project-mysql
@@ -83,16 +86,16 @@ services:
     mem_reservation: 700m
     ports:
       - 9090:8080
+    networks:
+      - proj-net
   #################################
   # Cart: The Cart microservice JAVA
   #################################
   cart_webapp:
-    restart: always
     #    image: pokemon:0.0.1-SNAPSHOT
     image: mon2020/cartapp:latest2
     depends_on:
       - project-mysql
-
     environment:
       - DATABASE_HOST=project-mysql
       - DATABASE_USER=user
@@ -101,12 +104,10 @@ services:
       - DATABASE_PORT=3306
     mem_limit: 750m
     mem_reservation: 700m
-
     ports:
       - 9393:8080
-
-
-
+    networks:
+      - proj-net
 
 # cd seller/prject
 # docker compose up

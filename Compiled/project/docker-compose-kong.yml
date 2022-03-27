@@ -1,0 +1,240 @@
+version: "3.9"
+volumes:
+  pgdata:
+  kongadata:
+networks:
+  proj-net:
+    driver: bridge
+services:
+  #######################################
+  # Postgres: The database used by Kong
+  #######################################
+  kong-database:
+    image: postgres:9.6
+    platform: linux/amd64
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      POSTGRES_DB: kong
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+  #######################################
+  # Kong database migration
+  #######################################
+  kong-migration:
+    image: kong:2.0.4
+    platform: linux/amd64
+    command: "kong migrations bootstrap"
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: password
+    depends_on:
+      - kong-database
+  # #######################################
+  # # Sellers: The database used by seller
+  # #######################################
+  # sellers-database:
+  #   image: postgres:9.6
+  #   platform: linux/amd64
+  #   restart: on-failure
+  #   networks:
+  #     - proj-net
+  #   environment:
+  #     POSTGRES_DB: sellers
+  #     POSTGRES_USER: sellers
+  #     POSTGRES_PASSWORD: sellers
+  #   ports:
+  #     - "5343:5432"
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "sellers"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #     - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
+  #     # - ./init/Invent_Cart.sql:/docker-entrypoint-initdb.d/Invent_Cart.sql
+  #     # - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
+  #     # - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
+  #     # - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
+
+  # #################################
+  # # Seller: The seller microservice Python
+  # #################################
+  # seller:
+  #   build:
+  #       context: ./
+  #       dockerfile: seller.Dockerfile
+  #   networks:
+  #       - proj-net
+  #   image: jialequek2020/seller:1.0
+  #   depends_on:
+  #     - sellers-database
+  #   environment:
+  #     # DATABASE_HOST: project-mysql
+  #     # DATABASE_USER: user
+  #     # DATABASE_PASSWORD: user
+  #     # DATABASE_NAME: sellers
+  #     # DATABASE_PORT: 3306
+  #     DB_ADAPTER: postgres
+  #     DB_HOST: sellers-database
+  #     DB_USER: sellers
+  #     DB_PASSWORD: sellers
+  #     DB_DATABASE: sellers
+  #     dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+  #     # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+  #   ports:
+  #     - 9191:5100
+  #######################################
+  # Kong: The API Gateway
+  #######################################
+  kong:
+    image: kong:2.0.4
+    platform: linux/amd64
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: password
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    depends_on:
+      - kong-migration
+    ports:
+      - "8000:8000"
+  
+  #######################################
+  # Konga: Kong GUI
+  #######################################
+  konga:
+    image: pantsel/konga
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      DB_ADAPTER: postgres
+      DB_HOST: kong-database
+      DB_USER: kong
+      DB_PASSWORD: password
+      DB_DATABASE: konga_db
+    depends_on:
+      - kong
+    ports:
+      - "1337:1337"
+    volumes:
+      - kongadata:/app/kongadata
+
+# cd seller/prject
+# docker compose up
+
+# *** commands to test and see if database is inside docker *** #
+  # docker exec -it project-project-mysql-1 bash -l
+  # mysql -u root -p
+  # show databases;
+  #        - ./init/cart.sql:/docker-entrypoint-initdb.d/cart.sql
+  #        - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
+
+  #################################
+  # Customer: The Customer microservice Python
+  #################################
+  # customer:
+  #   build:
+  #       context: ./
+  #       dockerfile: customer.Dockerfile
+  #   networks:
+  #       - proj-net
+  #   image: jialequek2020/customer:1.0
+  #   depends_on:
+  #     - project-mysql
+  #   environment:
+  #     DATABASE_HOST: project-mysql
+  #     DATABASE_USER: user
+  #     DATABASE_PASSWORD: user
+  #     DATABASE_NAME: customers
+  #     DATABASE_PORT: 3306
+  #     dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+  #   ports:
+  #   - 9292:5000
+  #################################
+  # Inventory: The Inventory microservice JAVA
+  #################################
+  # inventory_webapp:
+  #   image: maars505/springinventory:CORS_CRUD
+  #   restart: on-failure
+  #   networks:
+  #       - proj-net
+  #   depends_on:
+  #     - project-mysql
+  #   environment:
+  #     DATABASE_HOST: project-mysql
+  #     DATABASE_USER: user
+  #     DATABASE_PASSWORD: user
+  #     DATABASE_NAME: inventory
+  #     DATABASE_PORT: 3306
+  #   mem_limit: 750m
+  #   mem_reservation: 700m
+  #   ports:
+  #     - 9090:8080
+  #################################
+  # Cart: The Cart microservice JAVA
+  #################################
+  # cart_webapp:
+  #   #    image: pokemon:0.0.1-SNAPSHOT
+  #   image: mon2020/cartapp:latest2
+  #   restart: on-failure
+  #   networks:
+  #       - proj-net
+  #   depends_on:
+  #     - project-mysql
+  #   environment:
+  #     - DATABASE_HOST=project-mysql
+  #     - DATABASE_USER=user
+  #     - DATABASE_PASSWORD=user
+  #     - DATABASE_NAME=cart
+  #     - DATABASE_PORT=3306
+  #   mem_limit: 750m
+  #   mem_reservation: 700m
+  #   ports:
+  #     - 9393:8080
+      #################################  
+  # MySQL
+  #################################
+  # project-mysql:
+  #     networks:
+  #       - proj-net
+  #     platform: linux/amd64
+  #     image: mysql:latest
+  #     # maybe image: mysql
+  #     command: --default-authentication-plugin=mysql_native_password
+  #     environment:
+  #         MYSQL_ROOT_PASSWORD: root
+  #         MYSQL_DATABASE: mydb
+  #         MYSQL_USER: user
+  #         MYSQL_PASSWORD: user
+  #     volumes: 
+  #         - ./init/Invent_Cart.sql:/docker-entrypoint-initdb.d/Invent_Cart.sql
+  #         - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
+  #         - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
+  #         - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
+  #     ports:
+  #       - 3306:3306
