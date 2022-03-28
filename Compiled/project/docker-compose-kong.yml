@@ -75,33 +75,35 @@ services:
   #     # - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
   #     # - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
 
-  # #################################
-  # # Seller: The seller microservice Python
-  # #################################
-  # seller:
-  #   build:
-  #       context: ./
-  #       dockerfile: seller.Dockerfile
-  #   networks:
-  #       - proj-net
-  #   image: jialequek2020/seller:1.0
-  #   depends_on:
-  #     - sellers-database
-  #   environment:
-  #     # DATABASE_HOST: project-mysql
-  #     # DATABASE_USER: user
-  #     # DATABASE_PASSWORD: user
-  #     # DATABASE_NAME: sellers
-  #     # DATABASE_PORT: 3306
-  #     DB_ADAPTER: postgres
-  #     DB_HOST: sellers-database
-  #     DB_USER: sellers
-  #     DB_PASSWORD: sellers
-  #     DB_DATABASE: sellers
-  #     dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
-  #     # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
-  #   ports:
-  #     - 9191:5100
+  #################################
+  # Seller: The seller microservice Python
+  #################################
+  seller:
+    build:
+        context: ./
+        dockerfile: seller.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/seller:1.0
+    depends_on:
+      - sellers-database
+    environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: sellers
+      # DATABASE_PORT: 3306
+      DB_ADAPTER: postgres
+      DB_HOST: sellers-database
+      DB_USER: sellers
+      DB_PASSWORD: sellers
+      DB_DATABASE: sellers
+      # dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9191:5100
+      # - 3306:3306
   #######################################
   # Kong: The API Gateway
   #######################################
@@ -154,47 +156,54 @@ services:
   #        - ./init/cart.sql:/docker-entrypoint-initdb.d/cart.sql
   #        - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
 
-  #################################
+  ################################
   # Customer: The Customer microservice Python
-  #################################
-  # customer:
-  #   build:
-  #       context: ./
-  #       dockerfile: customer.Dockerfile
-  #   networks:
-  #       - proj-net
-  #   image: jialequek2020/customer:1.0
-  #   depends_on:
-  #     - project-mysql
-  #   environment:
-  #     DATABASE_HOST: project-mysql
-  #     DATABASE_USER: user
-  #     DATABASE_PASSWORD: user
-  #     DATABASE_NAME: customers
-  #     DATABASE_PORT: 3306
-  #     dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
-  #   ports:
-  #   - 9292:5000
+  ################################
+  customer:
+    build:
+        context: ./
+        dockerfile: customer.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/customer:1.0
+    depends_on:
+      - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: customers
+      DATABASE_PORT: 3306
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/customers
+    ports:
+    - 9292:5000
   #################################
   # Inventory: The Inventory microservice JAVA
   #################################
-  # inventory_webapp:
-  #   image: maars505/springinventory:CORS_CRUD
-  #   restart: on-failure
-  #   networks:
-  #       - proj-net
-  #   depends_on:
-  #     - project-mysql
-  #   environment:
-  #     DATABASE_HOST: project-mysql
-  #     DATABASE_USER: user
-  #     DATABASE_PASSWORD: user
-  #     DATABASE_NAME: inventory
-  #     DATABASE_PORT: 3306
-  #   mem_limit: 750m
-  #   mem_reservation: 700m
-  #   ports:
-  #     - 9090:8080
+  inventory:
+    image: maars505/springinventory:CORS_CRUD_KONG
+    restart: on-failure
+    networks:
+        - proj-net
+    # depends_on:
+    #   - project-mysql
+    # environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: inventory
+      # DATABASE_PORT: 3306
+      # DATABASE_HOST: host.docker.internal
+      # DATABASE_USER: root
+      # DATABASE_PASSWORD: root
+      # DATABASE_NAME: inventory
+      # DATABASE_PORT: 3308
+    mem_limit: 750m
+    mem_reservation: 700m
+    ports:
+      - 9090:8080
   #################################
   # Cart: The Cart microservice JAVA
   #################################

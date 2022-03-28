@@ -1,5 +1,6 @@
 -- ======================= SELLER ========================== --
-CREATE DATABASE IF NOT EXISTS `sellers`;
+-- CREATE DATABASE IF NOT EXISTS `sellers`;
+CREATE DATABASE "sellers";
 GRANT ALL ON `sellers`.* TO 'user'@'%';
 USE `sellers`;
 --

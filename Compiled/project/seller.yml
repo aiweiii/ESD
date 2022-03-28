@@ -1,0 +1,83 @@
+  
+version: "3.9"
+# volumes:
+#   pgdata:
+#   kongadata:
+# networks:
+#   proj-net:
+#     driver: bridge
+services:
+  #################################
+  # Seller: The seller microservice Python
+  #################################
+  seller:
+    build:
+        context: ./
+        dockerfile: seller.Dockerfile
+    # networks:
+    #     - proj-net
+    image: jialequek2020/seller:1.0
+    depends_on:
+      - sellers-database
+    environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: sellers
+      # DATABASE_PORT: 3306
+      DB_ADAPTER: postgres
+      DB_HOST: sellers-database
+      DB_USER: sellers
+      DB_PASSWORD: sellers
+      DB_DATABASE: sellers
+      dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+    ports:
+      - 9191:5100
+
+
+
+  # #######################################
+  # # Kong database migration
+  # #######################################
+  # kong-migration:
+  #   image: kong:2.0.4
+  #   platform: linux/amd64
+  #   command: "kong migrations bootstrap"
+  #   restart: on-failure
+  #   networks:
+  #     - proj-net
+  #   environment:
+  #     KONG_DATABASE: postgres
+  #     KONG_PG_HOST: kong-database
+  #     KONG_PG_USER: kong
+  #     KONG_PG_PASSWORD: password
+  #   depends_on:
+  #     - kong-database
+  #######################################
+  # Sellers: The database used by seller
+  #######################################
+  sellers-database:
+    image: postgres:9.6
+    platform: linux/amd64
+    restart: on-failure
+    # networks:
+    #   - proj-net
+    environment:
+      POSTGRES_DB: sellers
+      POSTGRES_USER: sellers
+      POSTGRES_PASSWORD: sellers
+    ports:
+      - "5343:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "sellers"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      # - pgdata:/var/lib/postgresql/data
+      # - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
+      # - ./init/Invent_Cart.sql:/docker-entrypoint-initdb.d/Invent_Cart.sql
+      - ./init/sellers.sql:/docker-entrypoint-initdb.d/sellers.sql
+      # - ./init/order.sql:/docker-entrypoint-initdb.d/order.sql
+      # - ./init/customers.sql:/docker-entrypoint-initdb.d/customers.sql
