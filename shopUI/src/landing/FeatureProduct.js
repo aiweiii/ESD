@@ -1,9 +1,13 @@
 import Image from "../nillkin-case.webp";
 import { Link, BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ProductDetail from "../products/detail/ProductDetail";
+import { requirePropFactory } from "@mui/material";
 
-function FeatureProduct({item}) {
-  console.log("item",item)
+
+function FeatureProduct({item, doClick}) {
+
+  console.log(item.sellerId)
+  console.log(item.id)
 
   return (
     <div className="col">
@@ -12,20 +16,24 @@ function FeatureProduct({item}) {
           className="card-img-top bg-dark cover"
           height="240"
           alt=""
+          // src={`./productImages/${item.sellerId}/${item.id}-1.webp`}
+          // src={ require(`${Image}/${item.sellerId}/${item.id}-1.webp`) }
           src={Image}
         />
         <div className="card-body">
           <h5 className="card-title text-center">{item.productName}</h5>
           <p className="card-text text-center text-muted">$ {item.itemPrice}</p>
           <div className="d-grid gap-2">
+
+            <Link to={`/products/${item.id}`} className="btn btn-outline-dark" replace >Details</Link>
+            <button onClick={() => doClick(item)} className="btn btn-outline-dark" replace >Add to Cart</button>
+
+            {/* I think the problem is within the ROUTE and LINK!!! */}
+
             <Switch>
-              <Route path="/products/:id">
-                <ProductDetail sth={1} />
+              <Route exact path="/products/:id" component={ProductDetail}>
               </Route>
             </Switch>
-
-            <Link to={`/products/${item.id}`} className="btn btn-outline-dark" replace>Details</Link>
-            {/* I think the problem is within the ROUTE and LINK!!! */}
 
           </div>
         </div>
