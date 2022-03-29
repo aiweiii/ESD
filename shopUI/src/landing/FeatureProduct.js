@@ -1,4 +1,4 @@
-import Image from "../nillkin-case.webp";
+// import Image from "../nillkin-case.webp";
 import { Link, BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ProductDetail from "../products/detail/ProductDetail";
 import { requirePropFactory } from "@mui/material";
@@ -6,8 +6,8 @@ import { requirePropFactory } from "@mui/material";
 
 function FeatureProduct({item, doClick}) {
 
-  console.log(item.sellerId)
-  console.log(item.id)
+  console.log("sellerid:",item.sellerId)
+  console.log("itemid:",item.id)
 
   return (
     <div className="col">
@@ -16,9 +16,9 @@ function FeatureProduct({item, doClick}) {
           className="card-img-top bg-dark cover"
           height="240"
           alt=""
-          // src={`./productImages/${item.sellerId}/${item.id}-1.webp`}
-          // src={ require(`${Image}/${item.sellerId}/${item.id}-1.webp`) }
-          src={Image}
+          // src={require(`./${item.id}-1.jpeg`)}
+          src={item.productName}
+          // src={Image}
         />
         <div className="card-body">
           <h5 className="card-title text-center">{item.productName}</h5>

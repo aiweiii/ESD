@@ -19,6 +19,17 @@ function Landing({doClick}) {
     .catch(err => console.log(err))
   },[])
 
+  // const images=[
+  //   {pic:"./1-1.jpeg"},
+  //   {pic:"./2-1.jpeg"},
+  //   {pic:"/3-1.jpeg"},
+  //   {pic:"./4-1.jpeg"},
+  //   {pic:"./5-1.jpeg"},
+  //   {pic:"/6-1.jpeg"},
+  //   {pic:"./7-1.jpeg"},
+  //   {pic:"./8-1.jpeg"},
+  //   {pic:"/9-1.jpeg"},
+  // ]
 
   return (
     <>
