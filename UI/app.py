@@ -22,8 +22,12 @@ class Todo(db.Model):
 
 
 @app.route("/")
-def index():
+def home():
     return render_template('homepage.html')
+
+@app.route("/cart")
+def cart():
+    return render_template('cart.html')
 
 
 if __name__ == "__main__":
