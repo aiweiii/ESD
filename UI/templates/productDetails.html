@@ -14,24 +14,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='pDesc.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css')}}">
 </head>
 
 <body>
-        <!-- header starts -->
-        <h2>the shop.</h2>
+    <!-- header contains the top bar: logo, search bar, login, cart -->
+    <header>
+        <!-- <img class="logo" src="{{url_for('static', filename='images/logo_goes_here.png')}}" alt="logo"> -->
+        <a href="/" class="fs-2">the shop.</a>
         <nav>
             <ul class="nav-links">
                 <li class="searchbar">
                     <input type="text" placeholder="Search">
                     <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
                 </li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/cart">Cart</a></li>
+                <li><a href="/login" class="fs-5">Login</a></li>
+                <li><a href="/cart" class="fs-5">Cart</a></li>
             </ul>
         </nav>
-        </header>
-        <!-- header ends -->
+    </header>
 
         <!-- main content starts -->
         <div class="container mt-5 py-4 px-xl-5">
