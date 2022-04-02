@@ -80,6 +80,7 @@ def find_by_sellerID(sellerID):
 @app.route("/sellers/createSeller", methods=['POST'])
 def create_seller():
     data = request.get_json()
+    #to get last seller id
     SellersID = Seller.query.order_by(Seller.sellerID.desc()).first()
     id = ''.join(id for id in str(SellersID) if id.isdigit())
     seller = Seller(int(id)+1,**data)
