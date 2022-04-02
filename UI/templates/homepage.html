@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/ico" href="../static/images/favicon.ico">
+    <script src="../static/cart.js"></script>
     <title>the shop. | Home</title>
 
     <!-- Bootstrap CSS -->
@@ -18,7 +20,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css')}}">
 </head>
 
-<body>
+<body onload="ready()">
     <header>
         <!-- <img class="logo" src="{{url_for('static', filename='images/logo_goes_here.png')}}" alt="logo"> -->
         <a href="/" class="fs-2">the shop.</a>
@@ -73,22 +75,24 @@
                     items.forEach(item => {
 
                         var imgFileName = "static/images/" + item.id + "-1.jpeg";
-                        card=`<div className="col">
+                        card=`<div class="col">
                                 <div class="card shadow-sm">
-                                    <img class="card-img-top bg-dark cover" alt="${item.productName}" src=${imgFileName}>
+                                    <img class="card-img-top bg-dark cover" id="shop-item-image" alt="${item.productName}" src=${imgFileName}>
                                     <div class="card-body">
-                                        <h5 class="card-title text-center">${item.productName}</h5>
-                                        <p class="card-text text-center text-muted">SGD ${item.itemPrice}</p>
+                                        <h5 class="card-title text-center" id="shop-item-title">${item.productName}</h5>
+                                        <p class="card-text text-center text-muted" id="shop-item-price">SGD ${item.itemPrice}</p>
 
                                         <div class="d-grid gap-2">
                                             <a href="/productDetails/${item.id}" class="btn btn-outline-dark"">Details</a>
-                                            <a href="#" class="btn btn-primary shop-item-button">Add to Cart</a>
+                                            <button class="btn btn-primary shop-item-button" type="button">ADD TO CART</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>`;
 
                         document.getElementById("productCards").innerHTML += card;
+
+                        console.log("items cards have been replicated")
                     });
 
                 } else if (response.status == 404) {
@@ -105,43 +109,7 @@
                     ('There is a problem retrieving product data, please try again later.<br />' + error);
             } // error
         });
-
-        var addToCartButtons = document.getElementsByClassName('shop-item-button')
-            for (var i = 0; i < addToCartButtons.length; i++) {
-                var button = addToCartButtons[i]
-                button.addEventListener('click', addToCartClicked)
-            }
-
-        function addToCartClicked(event) {
-                var button = event.target
-                var shopItem = button.parentElement.parentElement
-                var title = shopItem.getElementsByClassName('shop-item-title')[0].innerText
-                var price = shopItem.getElementsByClassName('shop-item-price')[0].innerText
-                var imageSrc = shopItem.getElementsByClassName('shop-item-image')[0].src
-                addItemToCart(title, price, imageSrc)
-                updateCartTotal()
-            }
-
-        function updateCartTotal() {
-                var cartItemContainer = document.getElementsByClassName('cart-items')[0]
-                var cartRows = cartItemContainer.getElementsByClassName('cart-row')
-                var total = 0
-                for (var i = 0; i < cartRows.length; i++) {
-                    var cartRow = cartRows[i]
-                    var priceElement = cartRow.getElementsByClassName('cart-price')[0]
-                    var quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0]
-                    var price = parseFloat(priceElement.innerText.replace('$', ''))
-                    var quantity = quantityElement.value
-                    total = total + (price * quantity)
-                }
-                total = Math.round(total * 100) / 100
-                document.getElementsByClassName('cart-total-price')[0].innerText = '$' + total
-            }
-
-
-
     </script>
-
 
     <script src="https://kit.fontawesome.com/b7cadf2b6a.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
