@@ -6,7 +6,8 @@
 // }
 
 // function ready() {
-// document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function(){
+
     console.log('entered');
     let carts = document.querySelectorAll(".shop-item-button");
 
@@ -26,7 +27,7 @@
     //         console.log("entered");
     //     })
     // }
-// })
+})
 
     // var removeCartItemButtons = document.getElementsByClassName('btn-danger')
     // for (var i = 0; i < removeCartItemButtons.length; i++) {
