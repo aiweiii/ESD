@@ -1,3 +1,4 @@
+
 // if (document.readyState == 'loading') {
 //     document.addEventListener('DOMContentLoaded', ready)
 // } else {
@@ -5,9 +6,27 @@
 // }
 
 // function ready() {
-function ready() {
-    console.log("entered script");
-}
+// document.addEventListener('DOMContentLoaded', function(){
+    console.log('entered');
+    let carts = document.querySelectorAll(".shop-item-button");
+
+    for (let i = 0; i < carts.length; i++) {
+        carts[i].addEventListener('click', () => {
+            console.log("added to cart");
+        })
+
+    }
+
+    // var addToCartButtons = document.getElementsByClassName('shop-item-button')
+    // console.log("ENTERED SCRIPT");
+    // console.log(addToCartButtons.length);
+    // for (var i = 0; i < addToCartButtons.length; i++) {
+    //     var button = addToCartButtons[i]
+    //     button.addEventListener('click', function(){
+    //         console.log("entered");
+    //     })
+    // }
+// })
 
     // var removeCartItemButtons = document.getElementsByClassName('btn-danger')
     // for (var i = 0; i < removeCartItemButtons.length; i++) {
