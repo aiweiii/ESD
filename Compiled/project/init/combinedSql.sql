@@ -66,9 +66,9 @@ COMMIT;
 -- ======================= SELLER END ========================== --
 
 -- -- ======================= ORDER ========================== --
-CREATE DATABASE IF NOT EXISTS `orders`;
+CREATE DATABASE IF NOT EXISTS `order`;
 -- ADDED THIS PART TO CREATE MULTIPLE DATABASES:
-USE `orders`;
+USE `order`;
 -- --------------------------------------------------------
 --
 -- TABLE STRUCTURE FOR TABLE `ORDER`
@@ -108,9 +108,9 @@ CREATE TABLE IF NOT EXISTS `order_item` (
 --
 -- DUMPING DATA FOR TABLE `ORDER_ITEM`
 --
-INSERT INTO `order_item` (`order_item_id`, `order_id`, `sellerID`, `productName`, `itemPrice`,`quantity`) VALUES
-(1, 1, 1, 'MaarsBar', 100.29, 10),
-(2, 1, 1, 'AiWeiJack', 20.29, 10);
+INSERT INTO `order_item` (`order_item_id`, `order_id`, `sellerID`, `id`, `productName`, `itemPrice`,`quantity`) VALUES
+(1, 1, 1, 1, 'MaarsBar', 100.29, 10),
+(2, 1, 1, 1, 'AiWeiJack', 20.29, 10);
 --
 -- CONSTRAINTS FOR DUMPED TABLES
 --
