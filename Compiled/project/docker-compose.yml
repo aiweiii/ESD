@@ -65,7 +65,7 @@ services:
       - DB_USERNAME=root
       - DB_PASSWORD=root
       - OPENSHIFT_MYSQL_DB_PORT=3308
-      - OPENSHIFT_MYSQL_DB_NAME=cart
+      - OPENSHIFT_MYSQL_DB_NAME=inventory
     mem_limit: 750m
     mem_reservation: 700m
     ports:
@@ -75,11 +75,8 @@ services:
   # Cart: The Cart microservice JAVA
   #################################
   cart_webapp:
-    #    image: pokemon:0.0.1-SNAPSHOT
-    # image: mon2020/cartapp:latest
-    # image: mon2020/cartapp:CORS_CRUD_KONG
+
     image: maars505/cartapp:MODIFIABLE
-    # image: mon2020/cartapp:latest
     restart: on-failure
     # networks:
     #     - proj-net
@@ -95,7 +92,7 @@ services:
     mem_reservation: 700m
     ports:
       - 9393:8080
-      
+
   #######################################
   # Postgres: The database used by Kong
   #######################################
