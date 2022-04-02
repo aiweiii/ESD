@@ -1,15 +1,7 @@
 from distutils.log import debug
 from flask import Flask, render_template, url_for
-# from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
-# CORS(app)
-# api_v1_cors_config = {
-#     "origins": ["http://localhost:5000"],
-#     "methods": ["OPTIONS", "GET", "POST"],
-#     "allow_headers": ["Authorization"]
-# }
-# CORS(app, resources={"/api/v1/*": api_v1_cors_config})
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -22,8 +14,18 @@ class Todo(db.Model):
 
 
 @app.route("/")
-def index():
+def home():
     return render_template('homepage.html')
+
+
+@app.route("/productDetails/<itemId>")
+def pDesc(itemId):
+    return render_template('productDetails.html')
+
+
+@app.route("/cart")
+def cart():
+    return render_template('cart.html')
 
 
 if __name__ == "__main__":

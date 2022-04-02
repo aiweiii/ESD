@@ -1,8 +1,8 @@
-
 body {
     font-family: Georgia, 'Times New Roman', Times, serif;
     background-color: #F7F6F4
 }
+
 li, a{
     font-weight: 500;
     font-size: 16px;
@@ -10,12 +10,14 @@ li, a{
     text-decoration: none;
 
 }
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 30px 10%;
 }
+
 .logo {
     cursor: pointer;
     width: 20%;
@@ -40,12 +42,9 @@ header {
 .heading {
     
     margin-right: 25px;
-  }
-  
-  
-  .checked {
-    color: #D84727;
-    
-  }
+}
 
-  
+.checked {
+color: #D84727;
+
+}
