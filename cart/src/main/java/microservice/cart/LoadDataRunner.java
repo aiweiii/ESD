@@ -14,27 +14,27 @@ public class LoadDataRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Cart cart1 = new Cart();
-        cart1.setCustId("1111");
-        cart1.setItemId("120");
-        cart1.setItemName("Apple");
+        cart1.setCustId("1");
+        cart1.setItemId("3");
+        cart1.setItemName("APPLE");
         cart1.setItemQuantity(3);
 
         Cart cart2 = new Cart();
-        cart2.setCustId("2222");
-        cart2.setItemId("120");
-        cart2.setItemName("Apple");
+        cart2.setCustId("2");
+        cart2.setItemId("3");
+        cart2.setItemName("APPLE");
         cart2.setItemQuantity(1);
 
         Cart cart3 = new Cart();
-        cart3.setCustId("2222");
-        cart3.setItemId("121");
-        cart3.setItemName("Banana");
+        cart3.setCustId("2");
+        cart3.setItemId("2");
+        cart3.setItemName("PINEAPPLE");
         cart3.setItemQuantity(3);
 
         Cart cart4 = new Cart();
-        cart4.setCustId("3333");
-        cart4.setItemId("122");
-        cart4.setItemName("Pear");
+        cart4.setCustId("3");
+        cart4.setItemId("1");
+        cart4.setItemName("FRUIT");
         cart4.setItemQuantity(3);
 
         cartRepository.save(cart1);

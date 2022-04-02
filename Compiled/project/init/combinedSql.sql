@@ -20,7 +20,7 @@ USE `customers`;
 --
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
-  `custID` varchar(64) NOT NULL,
+  `custID` int(11) NOT NULL AUTO_INCREMENT,
   `custName` varchar(64) NOT NULL,
   `custAddress` varchar(64) NOT NULL,
   `custCCNo` int(9) DEFAULT NULL,
@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS `customers` (
 -- Dumping data for table `customers`
 --
 INSERT INTO `customers` (`custID`, `custName`, `custAddress`, `custCCNo`) VALUES
-('1111', 'Emma Tan','53 Ang Mo Kio Avenue 3 Singapore 569933', '978112947'),
-('2222', 'Yvonne Kim', 'Blk 145 Lorong 2 Toa Payoh Singapore 310145', '978134947'),
-('3333', 'Michael Ang', 'Blk 150A Bishan Street 11 Singapore 571150', '978143447');
+(1, 'Emma Tan','53 Ang Mo Kio Avenue 3 Singapore 569933', '978112947'),
+(2, 'Yvonne Kim', 'Blk 145 Lorong 2 Toa Payoh Singapore 310145', '978134947'),
+(3, 'Michael Ang', 'Blk 150A Bishan Street 11 Singapore 571150', '978143447');
 COMMIT;
 --
 -- ======================= CUSTOMERS END ========================== --
@@ -76,7 +76,7 @@ USE `order`;
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE IF NOT EXISTS `order` (
   `order_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `customerID` VARCHAR(11) NOT NULL,
+  `customerID` int(11) NOT NULL,
   `status` VARCHAR(34) NOT NULL DEFAULT "Payment Completed",
   `dateOfPurchase` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `dateOfModification` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS `order` (
 -- DUMPING DATA FOR TABLE `ORDER`
 --
 INSERT INTO `order` (`order_id`, `customerID`, `status`, `dateOfPurchase`, `dateOfModification`) VALUES
-(1, '1111', 'NEW', '2020-06-12 02:14:55', '2020-06-12 02:14:55'),
-(2, '2222', 'NEW', '2020-06-12 02:14:55', '2020-06-12 02:14:55');
+(1, 1, 'NEW', '2020-06-12 02:14:55', '2020-06-12 02:14:55'),
+(2, 2, 'NEW', '2020-06-12 02:14:55', '2020-06-12 02:14:55');
 
 -- --------------------------------------------------------
 --
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `order_item` (
   `order_item_id` INT(11) NOT NULL  AUTO_INCREMENT,
   `order_id` INT(11) NOT NULL,
   `sellerID` INT(11) NOT NULL,
-  `id` INT(11) NOT NULL, 
+  `itemID` INT(11) NOT NULL, 
   `productName` VARCHAR(32) NOT NULL,
   `itemPrice` DECIMAL(5,2) NOT NULL,
   `quantity` INT(11) NOT NULL,
@@ -108,9 +108,9 @@ CREATE TABLE IF NOT EXISTS `order_item` (
 --
 -- DUMPING DATA FOR TABLE `ORDER_ITEM`
 --
-INSERT INTO `order_item` (`order_item_id`, `order_id`, `sellerID`, `id`, `productName`, `itemPrice`,`quantity`) VALUES
-(1, 1, 1, 1, 'MaarsBar', 100.29, 10),
-(2, 1, 1, 1, 'AiWeiJack', 20.29, 10);
+INSERT INTO `order_item` (`order_item_id`, `order_id`, `sellerID`, `itemID`, `productName`, `itemPrice`,`quantity`) VALUES
+(1, 1, 1, 3, 'APPLE', 6, 30),
+(2, 1, 1, 1, 'FRUIT', 10, 20);
 --
 -- CONSTRAINTS FOR DUMPED TABLES
 --

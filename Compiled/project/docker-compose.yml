@@ -53,10 +53,19 @@ services:
   # Inventory: The Inventory microservice JAVA
   #################################
   inventory:
-    image: maars505/springinventory:CORS_CRUD_KONG
+    # image: maars505/springinventory:CORS_CRUD_KONG
+    image: maars505/springinventory:MODIFIABLE
     restart: on-failure
-    networks:
-        - proj-net
+    # networks:
+    #     - proj-net
+    # depends_on:
+    #   - project-mysql
+    environment:
+      - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - OPENSHIFT_MYSQL_DB_PORT=3308
+      - OPENSHIFT_MYSQL_DB_NAME=cart
     mem_limit: 750m
     mem_reservation: 700m
     ports:
@@ -65,25 +74,28 @@ services:
   #################################
   # Cart: The Cart microservice JAVA
   #################################
-  # cart_webapp:
-  #   #    image: pokemon:0.0.1-SNAPSHOT
-  #   image: mon2020/cartapp:latest2
-  #   restart: on-failure
-  #   networks:
-  #       - proj-net
-  #   depends_on:
-  #     - project-mysql
-  #   environment:
-  #     - DATABASE_HOST=project-mysql
-  #     - DATABASE_USER=user
-  #     - DATABASE_PASSWORD=user
-  #     - DATABASE_NAME=cart
-  #     - DATABASE_PORT=3306
-  #   mem_limit: 750m
-  #   mem_reservation: 700m
-  #   ports:
-  #     - 9393:8080
-  
+  cart_webapp:
+    #    image: pokemon:0.0.1-SNAPSHOT
+    # image: mon2020/cartapp:latest
+    # image: mon2020/cartapp:CORS_CRUD_KONG
+    image: maars505/cartapp:MODIFIABLE
+    # image: mon2020/cartapp:latest
+    restart: on-failure
+    # networks:
+    #     - proj-net
+    # depends_on:
+    #   - project-mysql
+    environment:
+      - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - OPENSHIFT_MYSQL_DB_PORT=3308
+      - OPENSHIFT_MYSQL_DB_NAME=cart
+    mem_limit: 750m
+    mem_reservation: 700m
+    ports:
+      - 9393:8080
+      
   #######################################
   # Postgres: The database used by Kong
   #######################################

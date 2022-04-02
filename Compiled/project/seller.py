@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from os import environ
 # new cors error edit:
 from flask_cors import CORS, cross_origin
@@ -22,15 +23,19 @@ class Seller(db.Model):
     sellerName = db.Column(db.String(64), nullable=False)
     sellerCtcNo =  db.Column(db.Integer, nullable=False)
     sellerBankAccNo = db.Column(db.Integer, nullable=False)
+    telegramId = db.Column(db.Integer, nullable=False)
+    chatId = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, sellerID, sellerName, sellerCtcNo, sellerBankAccNo):
+    def __init__(self, sellerID, sellerName, sellerCtcNo, sellerBankAccNo,telegramId,chatId):
         self.sellerID = sellerID
         self.sellerName = sellerName
         self.sellerCtcNo = sellerCtcNo
         self.sellerBankAccNo = sellerBankAccNo
+        self.telegramId = telegramId
+        self.chatId = chatId
 
     def json(self):
-        return {"sellerID": self.sellerID, "sellerName": self.sellerName, "sellerCtcNo": self.sellerCtcNo, "sellerBankAccNo": self.sellerBankAccNo}
+        return {"sellerID": self.sellerID, "sellerName": self.sellerName, "sellerCtcNo": self.sellerCtcNo, "sellerBankAccNo": self.sellerBankAccNo,"telegramId": self.telegramId,"chatId": self.chatId}
 
 #get seller details
 @app.route("/sellers")
@@ -72,41 +77,31 @@ def find_by_sellerID(sellerID):
 
 
 #create seller
-@app.route("/sellers/<string:sellerID>", methods=['POST'])
-def create_seller(sellerID):
- 
-    if (Seller.query.filter_by(sellerID=sellerID).first()):
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "sellerID": sellerID
-                },
-                "message": "Seller already exists."
-            }
-        ), 400
- 
+@app.route("/sellers/createSeller", methods=['POST'])
+def create_seller():
     data = request.get_json()
-    seller = Seller(sellerID, **data)
+    #to get last seller id
+    SellersID = Seller.query.order_by(Seller.sellerID.desc()).first()
+    id = ''.join(id for id in str(SellersID) if id.isdigit())
+    seller = Seller(int(id)+1,**data)
  
     try:
+        
         db.session.add(seller)
         db.session.commit()
     except:
         return jsonify(
             {
                 "code": 500,
-                "data": {
-                    "sellerID": sellerID
-                },
-                "message": "An error occurred creating the customer."
+                "message": "An error occurred creating the customer."+ str(SellersID),
+                "ID": int(id)
             }
         ), 500
  
     return jsonify(
         {
             "code": 200,
-            "data": seller.json()
+            "data": seller.json() 
         } 
     ), 201
 
@@ -134,6 +129,10 @@ def update_seller(sellerID):
             seller.sellerCtcNo = data['sellerCtcNo']
         if data['sellerBankAccNo']:
             seller.sellerBankAccNo = data['sellerBankAccNo']
+        if data['telegramId']:
+            seller.telegramId = data['telegramId']
+        if data['chatId']:
+            seller.chatId = data['chatId']
         db.session.commit()
         return jsonify(
             {
