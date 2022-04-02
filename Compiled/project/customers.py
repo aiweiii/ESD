@@ -69,22 +69,15 @@ def find_by_custID(custID):
 
 
 #create customer
-@app.route("/customers/<string:custID>", methods=['POST'])
-def create_cust(custID):
- 
-    if (Customers.query.filter_by(custID=custID).first()):
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "custID": custID
-                },
-                "message": "Customer already exists."
-            }
-        ), 400
+@app.route("/customers/createCustomers", methods=['POST'])
+def create_cust():
+    
+    
  
     data = request.get_json()
-    customer = Customers(custID, **data)
+    CustomersID = Customers.query.order_by(Customers.custID.desc()).first()
+    id = ''.join(id for id in str(CustomersID) if id.isdigit())
+    customer = Customers(int(id)+1,**data)
  
     try:
         db.session.add(customer)
@@ -93,10 +86,8 @@ def create_cust(custID):
         return jsonify(
             {
                 "code": 500,
-                "data": {
-                    "custID": custID
-                },
-                "message": "An error occurred creating the customer."
+                "message": "An error occurred creating the customer."+ str(CustomersID),
+                "ID": int(id)
             }
         ), 500
  
@@ -151,32 +142,32 @@ def update_cust(custID):
         ), 500
     
 
-
-# delete customer
-@app.route("/customers/<string:custID>", methods=['DELETE'])
-def delete_cust(custID):
-    cust = Customers.query.filter_by(custID=custID).first()
-    if cust:
-        db.session.delete(cust)
-        db.session.commit()
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "custID": custID
-                },
-                "message": "Customer successfully deleted."
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "data": {
-                "custID": custID
-            },
-            "message": "Customer not found."
-        }
-    ), 404
+# not deactivating cutsomers in our case
+# # delete customer
+# @app.route("/customers/<string:custID>", methods=['DELETE'])
+# def delete_cust(custID):
+#     cust = Customers.query.filter_by(custID=custID).first()
+#     if cust:
+#         db.session.delete(cust)
+#         db.session.commit()
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "custID": custID
+#                 },
+#                 "message": "Customer successfully deleted."
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "data": {
+#                 "custID": custID
+#             },
+#             "message": "Customer not found."
+#         }
+#     ), 404
  
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

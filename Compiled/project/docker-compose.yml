@@ -55,6 +55,10 @@ services:
   inventory:
     image: maars505/springinventory:CORS_CRUD_KONG
     restart: on-failure
+    depends_on:
+      - konga
+      - kong-database
+      - kong
     networks:
         - proj-net
     mem_limit: 750m
