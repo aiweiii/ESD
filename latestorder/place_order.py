@@ -4,15 +4,49 @@ from flask_cors import CORS
 import os, sys
 
 import requests
+from pathlib import Path
+
+if Path('invokes.py').is_file():
+    print ("invokes.py File existssss!!!!")
+else:
+    print ("invokes.py File not exist")
+
+if Path('amqp_setup.py').is_file():
+    print ("amqp_setup.py file existssss!!!!")
+else:
+    print ("amqp_setup.py file not exist")
+
 from invokes import invoke_http
+# try:
+#     f = open("invokes.py")
+#     # Do something with the file
+# except IOError:
+#     print("File not accessible")
+# finally:
+#     f.close()
+
+# cache
+
 
 import amqp_setup
 import pika
 import json
 
+
+
+
+
 app = Flask(__name__)
 CORS(app)
 
+
+
+# official URLS USED:
+
+
+
+
+# SCHOOL ONES:
 #book_URL = "http://localhost:5000/book"
 order_URL = "http://localhost:5001/order"
 shipping_record_URL = "http://localhost:5002/shipping_record"
@@ -60,30 +94,42 @@ shipping_record_URL = "http://localhost:5002/shipping_record"
     # return result
 
 
+# CARTURL = "http://localhost:9393/"
+# INVENTORYURL = "http://localhost:9090/"
+# CUSTOMERURL = "http://localhost:9292/"
+# SELLERURL = "http://localhost:9191/"
+# ORDERURL = "http://localhost:5001/" + "order"
+
+
+CARTURL = "http://host.docker.internal:9393/"
+INVENTORYURL = "http://host.docker.internal:9090/"
+CUSTOMERURL = "http://host.docker.internal:9292/"
+SELLERURL = "http://host.docker.internal:9191/"
+ORDERURL = "http://host.docker.internal:9494/" + "order"
 
 
 def getAllCartItems(customerId):
-    url = "http://localhost:9393/cart/" + str(customerId)
+    url = CARTURL + "cart/" + str(customerId)
     response = requests.request("GET", url, headers={}, data={}).json()
     print(f"cart response: {response}  \n")
     return response
 
 
 def getAllInventoryItems(itemId):
-    url = "http://localhost:9090/items/" + str(itemId)
+    url = INVENTORYURL + "items/" + str(itemId)
     response = requests.request("GET", url, headers={}, data={}).json()
     return response
 
 
 def getCustomerInfo(customerId):
-    url = "http://localhost:9292/customers/" +  str(customerId)
+    url = CUSTOMERURL + "customers/" +  str(customerId)
     response = requests.request("GET", url, headers={}, data={}).json()
     print(f"customer response: {response}  \n")
     return response
 
 def getSellerInfo(sellerId):
     # current route for getting seller info:
-    url = "http://localhost:9191/sellers/" + str(sellerId)
+    url = SELLERURL + "sellers/" + str(sellerId)
     payload={}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload).json()
@@ -189,7 +235,7 @@ def processPlaceOrder(order):
     'Content-Type': 'application/json'
     }
     # problem here:
-    order_result = invoke_http(order_URL, method='POST', json=order)
+    order_result = invoke_http(ORDERURL, method='POST', json=order)
 
     code = order_result["code"]
     message = json.dumps(order_result)
@@ -435,7 +481,7 @@ def processCancelOrder(order):
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + " for placing an order...")
+    # print("This is flask " + os.path.basename(__file__) + " for placing an order...")
     app.run(host="0.0.0.0", port=5100, debug=True)
     # app.run(port=5100, debug=True)
     # Notes for the parameters: 

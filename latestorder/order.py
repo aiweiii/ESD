@@ -5,9 +5,9 @@
 # import os
 # from os import environ
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import os, sys
+from flask_sqlalchemy import SQLAlchemy
+# import os, sys
 from datetime import datetime
 import json
 
@@ -188,5 +188,4 @@ def update_order(order_id):
 
 
 if __name__ == '__main__':
-    print("This is flask for " + os.path.basename(__file__) + ": manage orders ...")
     app.run(host='0.0.0.0', port=5001, debug=True)

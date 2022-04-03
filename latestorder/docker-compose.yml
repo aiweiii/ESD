@@ -3,8 +3,10 @@ services:
   rabbitmq:
     image: 'rabbitmq:3-management'
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      # - "5672:5672"
+      # - "15672:15672"
+      - 5672:5672
+      - 15672:15672
 
 
 
@@ -13,14 +15,14 @@ services:
   # Seller: The seller microservice Python
   #################################
   seller:
-    build:
-        context: ./
-        dockerfile: seller.Dockerfile
+    # build:
+    #     context: ./
+    #     dockerfile: seller.Dockerfile
     # networks:
     #     - proj-net
     image: jialequek2020/seller:1.0
-    depends_on:
-      - sellers-database
+    # depends_on:
+    #   - sellers-database
     environment:
       # DATABASE_HOST: project-mysql
       # DATABASE_USER: user
@@ -46,13 +48,13 @@ services:
   order:
     build:
         context: ./
-        dockerfile: Order.Dockerfile
+        dockerfile: ./Order.Dockerfile
     # networks:
     #     - proj-net
-    # image: jialequek2020/seller:1.0
+    # image: maars505/order:1.0
     restart: on-failure
-    # depends_on:
-    #   - sellers-database
+    depends_on:
+      - rabbitmq
     environment:
       # DATABASE_HOST: project-mysql
       # DATABASE_USER: user
@@ -82,9 +84,9 @@ services:
     restart: on-failure
     # networks:
     #     - proj-net
-    # image: jialequek2020/seller:1.0
-    # depends_on:
-    #   - sellers-database
+    # image: maars505/placeorder:1.0
+    depends_on:
+      - rabbitmq
     environment:
       # DATABASE_HOST: project-mysql
       # DATABASE_USER: user
@@ -100,7 +102,7 @@ services:
       # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
       dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
     ports:
-      - 9595:5100
+      - 9696:5100
       # - 3306:3306
 
 
@@ -142,9 +144,9 @@ services:
   # Customer: The Customer microservice Python
   ################################
   customer:
-    build:
-        context: ./
-        dockerfile: customer.Dockerfile
+    # build:
+    #     context: ./
+    #     dockerfile: customer.Dockerfile
     # networks:
     #     - proj-net
     image: jialequek2020/customer:1.0
@@ -157,7 +159,7 @@ services:
       DATABASE_PASSWORD: user
       DATABASE_NAME: customers
       DATABASE_PORT: 3306
-      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+      # dbURL: mysql+msqlconnector://user:user@project-mysql:3306/customers
       # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
       dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/customers
     ports:
