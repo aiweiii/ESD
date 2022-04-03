@@ -45,13 +45,13 @@ app.secret_key = "esdproject"
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-GOOGLE_CLIENT_ID = "324188183280-hnl4e01jqngotf1fimqt47mat4l3c57h.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID = "324188183280-imf2vhl08f35oh4p7hdd0900k9st7si0.apps.googleusercontent.com"
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://127.0.0.1:3000/callback"
+    redirect_uri="http://localhost:3000/callback"
 )
 
 

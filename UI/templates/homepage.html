@@ -67,7 +67,7 @@
                 if (response.status === 200) {
                     // success case
                     var items = result;
-                    // window.localStorage.setItem("items", JSON.stringify(items))
+                    window.localStorage.setItem("items", JSON.stringify(items))
                     items.forEach(item => {
                         var imgFileName = "static/images/" + item.id + "-1.jpeg";
                         card=`<div class="col">
