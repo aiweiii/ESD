@@ -1,0 +1,270 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+
+
+
+    #################################
+  # Seller: The seller microservice Python
+  #################################
+  seller:
+    build:
+        context: ./
+        dockerfile: seller.Dockerfile
+    # networks:
+    #     - proj-net
+    image: jialequek2020/seller:1.0
+    depends_on:
+      - sellers-database
+    environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: sellers
+      # DATABASE_PORT: 3306
+      DB_ADAPTER: postgres
+      DB_HOST: sellers-database
+      DB_USER: sellers
+      DB_PASSWORD: sellers
+      DB_DATABASE: sellers
+      # dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9191:5100
+      # - 3306:3306
+
+
+          #################################
+  # order: The order microservice Python
+  #################################
+  order:
+    build:
+        context: ./
+        dockerfile: Order.Dockerfile
+    # networks:
+    #     - proj-net
+    # image: jialequek2020/seller:1.0
+    restart: on-failure
+    # depends_on:
+    #   - sellers-database
+    environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: sellers
+      # DATABASE_PORT: 3306
+      # DB_ADAPTER: postgres
+      # DB_HOST: sellers-database
+      # DB_USER: sellers
+      # DB_PASSWORD: sellers
+      # DB_DATABASE: sellers
+      # dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+      #  'mysql+mysqlconnector://root:root@localhost:3308/order'
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/order
+    ports:
+      - 9494:5001
+      # - 3306:3306
+
+                #################################
+  # place_order: The order microservice Python
+  #################################
+  place_order:
+    build:
+        context: ./
+        dockerfile: placeOrder.Dockerfile
+    restart: on-failure
+    # networks:
+    #     - proj-net
+    # image: jialequek2020/seller:1.0
+    # depends_on:
+    #   - sellers-database
+    environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: sellers
+      # DATABASE_PORT: 3306
+      DB_ADAPTER: postgres
+      DB_HOST: sellers-database
+      DB_USER: sellers
+      DB_PASSWORD: sellers
+      DB_DATABASE: sellers
+      # dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9595:5100
+      # - 3306:3306
+
+
+  #################################
+  # place_order: The order microservice Python
+  #################################
+  activitylog:
+    build:
+        context: ./
+        dockerfile: activityLog.Dockerfile
+    # networks:
+    #     - proj-net
+    # image: jialequek2020/seller:1.0
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    environment:
+      # DATABASE_HOST: project-mysql
+      # DATABASE_USER: user
+      # DATABASE_PASSWORD: user
+      # DATABASE_NAME: sellers
+      # DATABASE_PORT: 3306
+      DB_ADAPTER: postgres
+      DB_HOST: sellers-database
+      DB_USER: sellers
+      DB_PASSWORD: sellers
+      DB_DATABASE: sellers
+      # dbURL: postgresql://sellers:sellers@sellers-database:5343/sellers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/sellers
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9595:5100
+      # - 3306:3306
+
+
+
+
+  ################################
+  # Customer: The Customer microservice Python
+  ################################
+  customer:
+    build:
+        context: ./
+        dockerfile: customer.Dockerfile
+    # networks:
+    #     - proj-net
+    image: jialequek2020/customer:1.0
+    restart: on-failure
+    # depends_on:
+    #   - project-mysql
+    environment:
+      DATABASE_HOST: project-mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_NAME: customers
+      DATABASE_PORT: 3306
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+      # dbURL: mysql+mysqlconnector://user:user@project-mysql:3306/customers
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/customers
+    ports:
+    - 9292:5000
+
+
+
+#################################
+  # Inventory: The Inventory microservice JAVA
+  #################################
+  inventory:
+    # image: maars505/springinventory:CORS_CRUD_KONG
+    image: maars505/springinventory:MODIFIABLE
+    restart: on-failure
+    # networks:
+    #     - proj-net
+    # depends_on:
+    #   - project-mysql
+    environment:
+      - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - OPENSHIFT_MYSQL_DB_PORT=3308
+      - OPENSHIFT_MYSQL_DB_NAME=cart
+    mem_limit: 750m
+    mem_reservation: 700m
+    ports:
+      - 9090:8080
+
+  #################################
+  # Cart: The Cart microservice JAVA
+  #################################
+  cart_webapp:
+    #    image: pokemon:0.0.1-SNAPSHOT
+    # image: mon2020/cartapp:latest
+    # image: mon2020/cartapp:CORS_CRUD_KONG
+    image: maars505/cartapp:MODIFIABLE
+    # image: mon2020/cartapp:latest
+    restart: on-failure
+    # networks:
+    #     - proj-net
+    # depends_on:
+    #   - project-mysql
+    environment:
+      - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - OPENSHIFT_MYSQL_DB_PORT=3308
+      - OPENSHIFT_MYSQL_DB_NAME=cart
+    mem_limit: 750m
+    mem_reservation: 700m
+    ports:
+      - 9393:8080
+
+
+
+  # docker-mysql:
+  #   restart: always
+  #   #    image: mysql:latest
+  #   # image: mariadb:10.5.8
+  #   platform: linux/x86_64
+  #   build: ./db
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=Ilovespring!
+  #     # - MYSQL_DATABASE=order
+  #     - MYSQL_USER=user
+  #     - MYSQL_PASSWORD=Ilovespring!
+  #     # user:Ilovespring!
+  # #    mem_limit: 512m
+  # #    mem_reservation: 512m
+
+  # db:
+  #   restart: always
+  #   platform: linux/x86_64
+  #   image: mysql:latest
+  #   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  #   volumes:
+  #     - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: local
+
+  # # MySQL
+  # docker-mysql2:
+  #     restart: always
+  #     platform: linux/x86_64
+  #     image: mysql:latest
+  #     # image: mariadb:10.5.8
+  #     command: --default-authentication-plugin=mysql_native_password
+  #     environment:
+  #         - MYSQL_ROOT_PASSWORD=root
+  #         - MYSQL_DATABASE=mydb
+  #         - MYSQL_USER=user
+  #         - MYSQL_PASSWORD=user
+
+  #     volumes: 
+  #         - ./init/sqlorder.sql:/docker-entrypoint-initdb.d/sqlorder.sql
+
+  #     ports:
+  #       - 3306:3306
+  
+  # adminer:
+  #     image: adminer
+  #     restart: always
+  #     ports:
+  #         - 8080:8080
+
+
+# docker exec -it resources-docker-mysql2-1 bash -l
+  # mysql -u user -p
+  # show databases;
