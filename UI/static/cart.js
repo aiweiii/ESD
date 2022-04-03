@@ -8,14 +8,14 @@
 // function ready() {
 document.addEventListener('DOMContentLoaded', function(){
 
-    console.log('entered');
-    let carts = document.querySelectorAll(".shop-item-button");
+    console.log('entered cart.js');
+    let carts = document.getElementsByClassName("shop-item-button");
+    console.log(carts.length);
 
     for (let i = 0; i < carts.length; i++) {
         carts[i].addEventListener('click', () => {
             console.log("added to cart");
         })
-
     }
 
     // var addToCartButtons = document.getElementsByClassName('shop-item-button')
