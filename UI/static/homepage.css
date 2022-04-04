@@ -21,14 +21,13 @@ hr {
 }
 
 header {
-    /* display: flex; */
-    /* justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 30px 10%; */
-    background: yellow;
+    padding: 30px 10%;
 }
 
-.navbar {
+/* .navbar {
     position: fixed;
     top: 0;
     left: 50%;
@@ -47,7 +46,7 @@ header {
     background: white;
     z-index: 999;
 
-}
+} */
 
 .logo {
     cursor: pointer;
@@ -126,6 +125,7 @@ button:hover {
     right: 0;
     box-shadow: 0 3px 8px -2px rgba(0, 0, 0, 0.21);
     display: none;
+    z-index: 10;
 }
 
 .cart-container::-webkit-scrollbar {
