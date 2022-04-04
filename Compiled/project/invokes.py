@@ -5,6 +5,8 @@ SUPPORTED_HTTP_METHODS = set([
 ])
 
 def invoke_http(url, method='GET', json=None, **kwargs):
+
+    print(f"invoke_http json: {json}")
     """A simple wrapper for requests methods.
        url: the url of the http service;
        method: the http method;
