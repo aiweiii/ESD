@@ -10,10 +10,9 @@ services:
   # AMQP: Message Broker
   #################################
   rabbitmq:
-    build:
-        context: ./
-        dockerfile: amqp_setup.Dockerfile
-    image: 'rabbitmq:3-management'
+    networks:
+        - proj-net
+    image: rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
@@ -101,6 +100,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      ORDERURL: 
       dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
     ports:
       - 9696:5102
