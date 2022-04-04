@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import os, sys
-
+from os import environ
 import requests
 from pathlib import Path
 
@@ -101,11 +101,29 @@ shipping_record_URL = "http://localhost:5002/shipping_record"
 # ORDERURL = "http://localhost:5001/" + "order"
 
 
-CARTURL = "http://host.docker.internal:9393/"
-INVENTORYURL = "http://host.docker.internal:9090/"
-CUSTOMERURL = "http://host.docker.internal:9292/"
-SELLERURL = "http://host.docker.internal:9191/"
-ORDERURL = "http://host.docker.internal:9494/" + "order"
+# CARTURL = "http://host.docker.internal:9393/"
+# INVENTORYURL = "http://host.docker.internal:9090/"
+# CUSTOMERURL = "http://host.docker.internal:9292/"
+# SELLERURL = "http://host.docker.internal:9191/"
+# ORDERURL = "http://host.docker.internal:9494/" + "order"
+
+
+
+# print("ALL PRESENT:")
+# print(f"CARTURL: {environ.get('CARTURL')}")
+# print(f"INVENTORYURL: {environ.get('INVENTORYURL')}")
+# print(f"CUSTOMERURL: {environ.get('CUSTOMERURL')}")
+# print(f"SELLERURL: {environ.get('SELLERURL')}")
+# print(f"ORDERURL: {environ.get('ORDERURL')}")
+
+
+CARTURL = environ.get('CARTURL')
+INVENTORYURL = environ.get('INVENTORYURL')
+CUSTOMERURL = environ.get('CUSTOMERURL')
+SELLERURL = environ.get('SELLERURL')
+ORDERURL = environ.get('ORDERURL') + "order"
+
+
 
 
 def getAllCartItems(customerId):
@@ -113,6 +131,14 @@ def getAllCartItems(customerId):
     response = requests.request("GET", url, headers={}, data={}).json()
     print(f"cart response: {response}  \n")
     return response
+
+
+def deleteCustomerCart(customerId):
+    url = CARTURL + "/deleteCart/" + customerId
+    response = requests.request("DELETE", url, headers={}, data={})
+    print(f"cart response: {response}  \n")
+    return response
+
 
 
 def getAllInventoryItems(itemId):
@@ -202,8 +228,9 @@ def place_order():
             # 1. Send order info {cart items}
 
             order = json.dumps(order)
+            print(f"order jsondumped: {order}")
 
-            result = processPlaceOrder(order)
+            result = processPlaceOrder(order, custId)
             print('\n------------------------')
             print('\nresult: ', result)
             return jsonify(result), result["code"]
@@ -226,8 +253,8 @@ def place_order():
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
-@app.route("/after_paymentSuccess", methods=['POST'])
-def processPlaceOrder(order):
+# @app.route("/after_paymentSuccess", methods=['POST'])
+def processPlaceOrder(order, custId):
     # 2. Send the order info {cart items}
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
@@ -235,8 +262,10 @@ def processPlaceOrder(order):
     'Content-Type': 'application/json'
     }
     # problem here:
+    # invoke_http(url, method='GET', json=None, **kwargs):
+    print(f"ORDERURL: {ORDERURL} \n")
     order_result = invoke_http(ORDERURL, method='POST', json=order)
-
+    print(f"order_result: {order_result}")
     code = order_result["code"]
     message = json.dumps(order_result)
 
@@ -271,7 +300,10 @@ def processPlaceOrder(order):
     else:
         # 4. Record new order
         # record the activity log anyway
-        #print('\n\n-----Invoking activity_log microservice-----')
+        print('\n\n-----Clearing items from CART of customer-----')
+        
+        deleteCustomerCart(custId)
+
         print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')        
 
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.info", 
@@ -299,7 +331,7 @@ def shippingInvoke(order_id):
     print('\n\n-----Invoking processShipping-----')    
     
 
-    shippedStatusChange = invoke_http(order_URL + "/" + order_id, method='PUT', json={"status": "Shipped"})
+    shippedStatusChange = invoke_http(ORDERURL + "/" + order_id, method='PUT', json={"status": "Shipped"})
 
     print('\n\n-----Can check if shipped status update-----')    
 
@@ -384,7 +416,7 @@ def processCancelOrder(order):
     # order_result = invoke_http(order_URL, method='POST', json=order)
 
     
-    order_data = invoke_http(order_URL + "/" + str(order["id"]), method='GET')
+    order_data = invoke_http(ORDERURL + "/" + str(order["id"]), method='GET')
     print(f"got the cancelled order_data: {order_data}")
 
 
@@ -410,7 +442,7 @@ def processCancelOrder(order):
             "message": "Order cancellation failure as order has been shipped or already cancelled and cannot be cancelled"
         }
 
-    order_result = invoke_http(order_URL + "/" + str(order["id"]), method='PUT', json={"status": "Cancelled"})
+    order_result = invoke_http(ORDERURL + "/" + str(order["id"]), method='PUT', json={"status": "Cancelled"})
     
 
     print('order_result:', order_result)

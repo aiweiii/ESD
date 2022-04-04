@@ -3,7 +3,7 @@
 # to run this file as a python3 script
 
 # import os
-# from os import environ
+from os import environ
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -13,9 +13,12 @@ import json
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3308/order'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/seller'
-# app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:root@host.docker.internal:3308/order"
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:9191/order'
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3308/order'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
@@ -114,6 +117,7 @@ def find_by_order_id(order_id):
 
 @app.route("/order", methods=['POST'])
 def create_order():
+    print(f"reached order endpoint for posting order")
     newrequest = json.loads(request.json)
     customer_id = newrequest["customer_id"]
     order = Order(customerID=customer_id, status='PaymentCompleted')

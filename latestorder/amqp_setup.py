@@ -8,6 +8,8 @@ import pika
 # https://stackoverflow.com/questions/71033283/using-pika-how-to-connect-to-rabbitmq-running-in-docker-started-with-docker-co
 # hostname = "amqp://guest:guest@rabbitmq/"
 # hostname = "amqp://rabbitmq"
+
+# KONG:
 hostname = "rabbitmq"
 port = 5672 # default port
 # connect to the broker and set up a communication channel in the connection

@@ -9,12 +9,16 @@ import requests
 # telegram imports:
 # from sendTeleUpdate import messageTele
 
-from pathlib import Path
-if Path('amqp_setup.py').is_file():
-    print ("amqp_setup.py file existssss!!!!")
-else:
-    print ("amqp_setup.py file not exist")
+# from pathlib import Path
+# if Path('amqp_setup.py').is_file():
+#     print ("amqp_setup.py file existssss!!!!")
+# else:
+#     print ("amqp_setup.py file not exist")
 
+from os import environ
+
+# SELLERURL = "http://localhost:9191/"
+SELLERURL = environ.get('SELLERURL')
 
 import amqp_setup
 
@@ -186,7 +190,7 @@ def getSellerChatId(sellerId):
 
 def getSellerInfo(customerId):
     # current route for getting seller info:
-    url = "http://localhost:9191/sellers"
+    url = SELLERURL + "sellers"
     payload={}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload).json()
@@ -261,7 +265,7 @@ def callback(channel, method, properties, body): # required signature for the ca
     bodyJson = json.loads(body)
 
      # ADD OWN LOGIC -- is it here?: 
-    # print(f"TELEBOT SENDINGGGGG body -- {bodyJson}")
+    print(f"TELEBOT SENDINGGGGG body -- {bodyJson}")
 
 
     if "teleSeller" in bodyJson.keys():
@@ -269,13 +273,13 @@ def callback(channel, method, properties, body): # required signature for the ca
         uniqueSellersToText = list(set(bodyJson["teleSeller"].split("#")))
         # print(f"uniqueSellersToText: {uniqueSellersToText}")
         sellerData = organiseBySeller(bodyJson["allInfo"])
-        
+        print(f"organiseBySeller: {sellerData}")
         for seller, items in sellerData.items():
             chatId = getSellerChatId(seller)
             # print(f"chat id issss: {chatId}")
             formatedMessage4Seller = ""
             for i in items:
-                currItemId = i["id"]
+                currItemId = i["itemID"]
                 currItemName = i["productName"]
                 currItemOrderId = i["order_id"]
                 formatedMessage4Seller += f"Item with id:{currItemId}, productName: {currItemName}, order id: {currItemOrderId} \n"

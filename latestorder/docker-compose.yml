@@ -56,6 +56,8 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      
+
       # DATABASE_HOST: project-mysql
       # DATABASE_USER: user
       # DATABASE_PASSWORD: user
@@ -88,6 +90,11 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      CARTURL: http://host.docker.internal:9393/
+      INVENTORYURL: http://host.docker.internal:9090/
+      CUSTOMERURL: http://host.docker.internal:9292/
+      SELLERURL: http://host.docker.internal:9191/
+      ORDERURL: http://host.docker.internal:9494/
       # DATABASE_HOST: project-mysql
       # DATABASE_USER: user
       # DATABASE_PASSWORD: user
@@ -120,6 +127,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      SELLERURL: http://host.docker.internal:9191/
       # DATABASE_HOST: project-mysql
       # DATABASE_USER: user
       # DATABASE_PASSWORD: user
@@ -183,7 +191,7 @@ services:
       - DB_USERNAME=root
       - DB_PASSWORD=root
       - OPENSHIFT_MYSQL_DB_PORT=3308
-      - OPENSHIFT_MYSQL_DB_NAME=cart
+      - OPENSHIFT_MYSQL_DB_NAME=inventory
     mem_limit: 750m
     mem_reservation: 700m
     ports:
