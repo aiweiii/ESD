@@ -20,36 +20,40 @@
 </head>
 
 <body>
-    <header>
+    <!-- <header> -->
         <!-- <img class="logo" src="{{url_for('static', filename='images/logo_goes_here.png')}}" alt="logo"> -->
-        <a href="/" class="fs-2">the shop.</a>
-        <nav>
-            <ul class="nav-links">
-                <li class="searchbar">
-                    <input type="text" placeholder="Search">
-                    <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                </li>
-                <li><a href="/login" class="fs-5">Login</a></li>
-                <!-- <li><a href="/cart" class="fs-5" >Cart</a></li> -->
-                <li>
-                    <div class="cart">
-                        <button type="button" id="cart-btn">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cart-count-info"></span>
-                        </button>
-
-                        <div class="cart-container">
-                            <div class="cart-list"></div>
-
-                            <div class="cart-total">
-                                <h3>Total: $</h3>
-                                <span id="cart-total-value"></span>
+        <!-- <div class="container">
+            <nav class="navbar">
+                <a href="/" class="fs-2">the shop.</a>
+                <ul class="nav-links">
+                    <li class="searchbar">
+                        <input type="text" placeholder="Search">
+                        <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+                    </li>
+                    <li><a href="/login" class="fs-5">Login</a></li> -->
+                    <!-- <li><a href="/cart" class="fs-5" >Cart</a></li> -->
+                    <!-- <li>
+                        <div class="cart">
+                            <button type="button" id="cart-btn">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span id="cart-count-info"></span>
+                            </button>
+                            <div class="cart-container">
+                                <div class="cart-list"></div>
+                                <div class="cart-total">
+                                    <h3>Total: $</h3>
+                                    <span id="cart-total-value"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header> -->
+
+    <header>
+
     </header>
 
     <section>
@@ -84,12 +88,7 @@
                 if (response.status === 200) {
                     // success case
                     var items = result;
-<<<<<<< HEAD
-                    console.log(result);
-                    // window.localStorage.setItem("items", JSON.stringify(items))
-=======
                     window.localStorage.setItem("items", JSON.stringify(items))
->>>>>>> 5454241e83b01070ed5d57173adf14abde868d96
                     items.forEach(item => {
                         var imgFileName = "static/images/" + item.id + "-1.jpeg";
                         card=`<div class="col">

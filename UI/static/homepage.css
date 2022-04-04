@@ -21,10 +21,32 @@ hr {
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
+    /* display: flex; */
+    /* justify-content: space-between;
     align-items: center;
-    padding: 30px 10%;
+    padding: 30px 10%; */
+    background: yellow;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    width: 100%;
+    padding: 1.5rem 1rem !important;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 0;
+    background: white;
+    z-index: 999;
+
 }
 
 .logo {
@@ -69,7 +91,7 @@ button:hover {
     border: none;
     font-size: 1.5rem;
     background: none;
-    color: var(--granite-gray);
+    color: #333333;
     position: relative;
 }
 
@@ -77,8 +99,8 @@ button:hover {
     position: absolute;
     top: -12px;
     right: -8px;
-    background: var(--fire-bush);
-    color: #000;
+    background-color:coral;
+    color: white;
     font-size: 1rem;
     width: 25px;
     height: 25px;
@@ -111,7 +133,7 @@ button:hover {
 }
 
 .cart-container::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(22, 230, 237, 0.96);
     border-radius: 15px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
