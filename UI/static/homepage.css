@@ -81,6 +81,11 @@ button:hover {
 }
 
 /* CART */
+.add-to-cart-btn {
+    background-color: coral;
+    color: white;
+}
+
 .cart {
     justify-self: flex-end;
     padding-right: 8px;

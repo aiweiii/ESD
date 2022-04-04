@@ -62,8 +62,7 @@ function loadJSON(){
                                             <p class="card-text text-center text-muted" id="shop-item-price">$${item.itemPrice}</p>
                                             <div class="d-grid gap-2">
                                                 <a href="/productDetails/${item.id}" class="btn btn-outline-dark"">Details</a>
-                                                <button class="btn btn-primary add-to-cart-btn" type="button">Add to Cart</button>
-                                                <button class="btn btn-success" type="button">Pay Now</button>
+                                                <button class="btn add-to-cart-btn" type="button">Add to Cart</button>
                                             </div>
                                         </div>
                                     </div>
