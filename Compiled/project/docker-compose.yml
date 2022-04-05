@@ -6,31 +6,31 @@ networks:
   proj-net:
     driver: bridge
 services:
-  # #################################
-  # # AMQP: Message Broker
-  # #################################
-  # rabbitmq:
-  #   networks:
-  #       - proj-net
-  #   image: rabbitmq
-  #   ports:
-  #     - 5672:5672
-  #     - 15672:15672
+  #################################
+  # AMQP: Message Broker
+  #################################
+  rabbitmq:
+    networks:
+        - proj-net
+    image: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
   
-  # #################################
-  # # Seller: The seller microservice Python
-  # #################################
-  # seller:
-  #   build:
-  #       context: ./
-  #       dockerfile: seller.Dockerfile
-  #   networks:
-  #       - proj-net
-  #   image: jialequek2020/seller:1.0
-  #   environment:
-  #     dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
-  #   ports:
-  #     - 9191:5100
+  #################################
+  # Seller: The seller microservice Python
+  #################################
+  seller:
+    build:
+        context: ./
+        dockerfile: seller.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/seller:1.0
+    environment:
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9191:5100
 
   ################################
   # Customer: The Customer microservice Python
