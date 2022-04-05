@@ -138,7 +138,7 @@ def update_seller(sellerID):
             {
                 "code": 200,
                 "data": seller.json(), 
-                "message": "Successfully updated customer information"
+                "message": "Successfully updated seller information"
             }
         )
     except Exception as e:
@@ -148,7 +148,7 @@ def update_seller(sellerID):
                 "data": {
                     "sellerID": sellerID
                 },
-                "message": "An error occurred while updating customer's information. " + str(e)
+                "message": "An error occurred while updating seller's information. " + str(e)
             }
         ), 500
 
