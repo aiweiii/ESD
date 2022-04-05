@@ -14,7 +14,6 @@ import google.auth.transport.requests
 
 app = Flask(__name__)
 
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
@@ -22,22 +21,6 @@ db = SQLAlchemy(app)
 class Todo(db.Model):
     id =db.Column(db.Integer, primary_key = True)
     content = db.Column(db.String )
-
-
-@app.route("/")
-def home():
-    return render_template('homepage.html')
-
-
-@app.route("/productDetails/<itemId>")
-def pDesc(itemId):
-    return render_template('productDetails.html')
-
-
-# @app.route("/cart")
-# def cart():
-#     return render_template('cart.html')
-
 
 #------------------ login ------------------------#
 
@@ -54,18 +37,36 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="http://localhost:3000/callback"
 )
 
-
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
-            return abort(401)  # Authorization required
+            return render_template("error.html")  # Authorization required
         else:
             return function()
 
     return wrapper
 
+#------------------ routing ------------------------#
 
-@app.route("/login") #google
+@app.route("/")
+def home():
+    if "google_id" in session:
+        user = session["name"]
+    else:
+        user = ""
+    return render_template("homepage.html", user=user)
+
+
+@app.route("/productDetails/<itemId>")
+def pDesc(itemId):
+    return render_template('productDetails.html')
+
+
+@app.route("/cart")
+def cart():
+    return render_template('cart.html')
+
+@app.route("/login")
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
@@ -92,7 +93,7 @@ def callback():
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
-    return redirect("/cart")
+    return redirect("/")
 
 
 @app.route("/logout")
@@ -100,16 +101,10 @@ def logout():
     session.clear()
     return redirect("/")
 
-
-# @app.route("/") #homepage without login
-# def index():
-#     return render_template('test.html')
-
-
-# @app.route("/home") #homepage or whatever that needs to have the user login then can see
-# @login_is_required
-# def protected_area():
-#     return render_template('home.html')
+@app.route("/orderhistory") #homepage or whatever that needs to have the user login then can see
+@login_is_required
+def protected_area():
+    return render_template("orderhistory.html")
 
 if __name__ == "__main__":
     # app.run(debug=True)
