@@ -8,7 +8,7 @@ Seller: Manage inventory and receive order details
 
 ### Architecture
 It uses Kong API Gateway:
-<br>Entry point for client to make API requests. Kong will route incoming client requests to the relevant services (final API)
+* Entry point for client to make API requests. Kong will route incoming client requests to the relevant services (final API)
 
 It uses 1 composite microservice:
 * Place Order
