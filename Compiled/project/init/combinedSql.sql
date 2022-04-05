@@ -122,8 +122,9 @@ CREATE TABLE IF NOT EXISTS `seller` (
 -- Dumping data for table `seller`
 --
 INSERT INTO `seller` (`sellerID`, `sellerName`, `sellerCtcNo`, `sellerBankAccNo`,`telegramId`,`chatId`) VALUES
-('1', 'maars', '98989898', '7747332773','maars505',202631841),
-('2', 'liqing', '91919191', '7747733573','lliqing',202631841);
+('1', 'maars', '98989898', '7747332773','maars505',493366384),
+('2', 'liqing', '91919191', '9947733573','lliqing',202631841);
+('3', 'aiwei', '92929292', '2347733573','aiwei',503151420);
 COMMIT;
 --
 -- ======================= SELLER END ========================== --

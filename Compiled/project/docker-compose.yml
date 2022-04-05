@@ -42,7 +42,6 @@ services:
     networks:
         - proj-net
     image: jialequek2020/customer:1.0
-    
     environment:
       dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/customers
     ports:
@@ -57,7 +56,10 @@ services:
     networks:
         - proj-net
     depends_on:
-      - cart
+      - konga
+      - kong-database
+      - kong-migration
+      - kong
     environment:
       - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
       - DB_USERNAME=root
@@ -68,68 +70,6 @@ services:
     mem_reservation: 700m
     ports:
       - 9090:8080
-  
-  #################################
-  # order: The order microservice Python
-  #################################
-  order:
-    build:
-        context: ./
-        dockerfile: ./Order.Dockerfile
-    image: jialequek2020/order:1.0
-    networks:
-        - proj-net
-    restart: on-failure
-    depends_on:
-      - rabbitmq
-    environment:
-      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/order
-    ports:
-      - 9494:5001
-
-  #################################
-  # place_order: The order microservice Python
-  #################################
-  place_order:
-    build:
-        context: ./
-        dockerfile: placeOrder.Dockerfile
-    restart: on-failure
-    networks:
-        - proj-net
-    image: jialequek2020/placeorder:1.0
-    depends_on:
-      - rabbitmq
-    environment:
-      CARTURL: http://host.docker.internal:9393/
-      INVENTORYURL: http://host.docker.internal:9090/
-      CUSTOMERURL: http://host.docker.internal:9292/
-      SELLERURL: http://host.docker.internal:9191/
-      ORDERURL: http://host.docker.internal:9494/
-      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
-    ports:
-      - 9696:5100
-      # - 3306:3306
-
-
-  #################################
-  # activitylog: The activitylog microservice Python
-  #################################
-  activitylog:
-    build:
-        context: ./
-        dockerfile: activityLog.Dockerfile
-    networks:
-        - proj-net
-    image: jialequek2020/activitylog:1.0
-    restart: on-failure
-    depends_on:
-      - rabbitmq
-    environment:
-      SELLERURL: http://host.docker.internal:9191/
-      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
-    ports:
-      - 9595:5100
 
   #################################
   # Cart: The Cart microservice JAVA
@@ -154,6 +94,66 @@ services:
     mem_reservation: 700m
     ports:
       - 9393:8080
+  
+  #################################
+  # order: The order microservice Python
+  #################################
+  order:
+    build:
+        context: ./
+        dockerfile: ./Order.Dockerfile
+    image: jialequek2020/order:1.0
+    networks:
+        - proj-net
+    restart: on-failure
+    depends_on:
+      - cart
+    environment:
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/order
+    ports:
+      - 9494:5001
+
+  #################################
+  # place_order: The order microservice Python
+  #################################
+  place_order:
+    build:
+        context: ./
+        dockerfile: placeOrder.Dockerfile
+    restart: on-failure
+    networks:
+        - proj-net
+    image: jialequek2020/placeorder:1.0
+    depends_on:
+      - cart
+    environment:
+      CARTURL: http://host.docker.internal:9393/
+      INVENTORYURL: http://host.docker.internal:9090/
+      CUSTOMERURL: http://host.docker.internal:9292/
+      SELLERURL: http://host.docker.internal:9191/
+      ORDERURL: http://host.docker.internal:9494/
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9696:5100
+
+  #################################
+  # activitylog: The activitylog microservice Python
+  #################################
+  activitylog:
+    build:
+        context: ./
+        dockerfile: activityLog.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/activitylog:1.0
+    restart: on-failure
+    depends_on:
+      - cart
+    environment:
+      SELLERURL: http://host.docker.internal:9191/
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9595:5100
 
   #######################################
   # Postgres: The database used by Kong
