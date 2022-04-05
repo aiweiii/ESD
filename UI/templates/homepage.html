@@ -22,34 +22,7 @@
 <body>
     <header>
         <!-- <img class="logo" src="{{url_for('static', filename='images/logo_goes_here.png')}}" alt="logo"> -->
-        <div class="container">
-            <nav class="navbar">
-                <a href="/" class="fs-2">the shop.</a>
-                <ul class="nav-links">
-                    <li><a href="/login" class="fs-5">Login</a></li>
-                    <!-- <li><a href="/cart" class="fs-5" >Cart</a></li> -->
-                    <li>
-                        <div class="cart">
-                            <button type="button" id="cart-btn">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span id="cart-count-info"></span>
-                            </button>
-                            <div class="cart-container">
-                                <div class="cart-list"></div>
-                                <div class="cart-total">
-                                    <h3>Total: $</h3>
-                                    <span id="cart-total-value"></span>
-                                </div>
-                                <div class="d-grid gap-2 col-4 mx-auto my-3">
-                                    <button class="btn btn-primary" type="button">Pay Now</button>
-                                </div>
-
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        {% include 'nav.html' %}
     </header>
 
     <section>
