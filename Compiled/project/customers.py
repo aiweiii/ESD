@@ -50,9 +50,9 @@ def get_all():
     ), 404
 
 #get customer by ID
-@app.route("/customers/<string:custID>")
-def find_by_custID(custID):
-    customer = Customers.query.filter_by(custID=custID).first()
+@app.route("/customers/<string:custName>")
+def find_by_custName(custName):
+    customer = Customers.query.filter_by(custName=custName).first()
     if customer:
         return jsonify(
             {
@@ -71,8 +71,6 @@ def find_by_custID(custID):
 #create customer
 @app.route("/customers/createCustomers", methods=['POST'])
 def create_cust():
-    
-    
  
     data = request.get_json()
     CustomersID = Customers.query.order_by(Customers.custID.desc()).first()

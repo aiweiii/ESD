@@ -93,6 +93,7 @@ def callback():
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
+    session["photo"] = id_info.get("picture")
     return redirect("/")
 
 
@@ -103,8 +104,12 @@ def logout():
 
 @app.route("/orderhistory") #homepage or whatever that needs to have the user login then can see
 @login_is_required
-def protected_area():
-    return render_template("orderhistory.html")
+
+def orderpage():
+    user = session["name"]
+    pic = session["photo"]
+    
+    return render_template("orderhistory.html", user=user, pic=pic)
 
 if __name__ == "__main__":
     # app.run(debug=True)
