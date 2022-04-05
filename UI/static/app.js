@@ -5,6 +5,7 @@ const productList = document.querySelector('#product-list');
 const cartList = document.querySelector('.cart-list');
 const cartTotalValue = document.getElementById('cart-total-value');
 const cartCountInfo = document.getElementById('cart-count-info');
+// const payBtn = document.getElementById
 let cartItemID = 1;
 
 
@@ -131,6 +132,8 @@ function addToCartList(product){
         </button>
     `;
     cartList.appendChild(cartItem);
+
+
 }
 
 // save the product in the local storage

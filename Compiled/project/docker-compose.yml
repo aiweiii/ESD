@@ -52,7 +52,7 @@ services:
   # Inventory: The Inventory microservice JAVA
   #################################
   inventory:
-    image: maars505/springinventory:MODIFIABLE
+    image: maars505/springinventory:CORS_CRUD_KONG
     restart: on-failure
     networks:
         - proj-net
