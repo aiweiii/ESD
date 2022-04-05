@@ -1,11 +1,18 @@
 # ESD with Love
 
-Kong API Gateway:
-Entry point for client to make API requests. Kong will route incoming client requests to the relevant services (final API)
+## About our Project
+An application that allows users to search, purchase and manage items through an e-commerce website
 
-1 composite microservice:
+Customer: Search and purchase items
+Seller: Manage inventory and receive order details
+
+### Architecture
+It uses Kong API Gateway:
+<br>Entry point for client to make API requests. Kong will route incoming client requests to the relevant services (final API)
+
+It uses 1 composite microservice:
 * Place Order
-  Make calls to all the required microservices, consolidate the data, and transform the data before sending it to UI. 
+  <br>Make calls to all the required microservices, consolidate the data, and transform the data before sending it to UI. 
 
 It uses 5 microservices:
 * Customer to handle customer data.
