@@ -22,6 +22,8 @@ function eventListeners(){
     // show/hide cart container
     document.getElementById('cart-btn').addEventListener('click', () => {
         cartContainer.classList.toggle('show-cart-container');
+        $(document.getElementById("overlay")).toggle($(".show-cart-container").is(':visible'));
+
     });
 
     // add to cart
@@ -116,7 +118,6 @@ function getProductInfo(product){
         id: cartItemID,
         imgSrc: product.querySelector('img').src,
         name: product.querySelector('#shop-item-title').textContent,
-        category: product.querySelector('#shop-item-title').textContent, //change this to something else later
         price: product.querySelector('#shop-item-price').textContent
     }
     cartItemID++;
@@ -132,9 +133,8 @@ function addToCartList(product){
     cartItem.innerHTML = `
         <img src = "${product.imgSrc}" alt = "product image">
         <div class = "cart-item-info">
-            <h3 class = "cart-item-name">${product.name}</h3>
-            <span class = "cart-item-category">${product.category}</span>
-            <span class = "cart-item-price">${product.price}</span>
+            <h4 class = "cart-item-name">${product.name}</h4>
+            <h5 class = "cart-item-price">${product.price}</h5>
         </div>
 
         <button type = "button" class = "cart-item-del-btn">
