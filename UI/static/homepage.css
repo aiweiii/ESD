@@ -86,10 +86,6 @@ button:hover {
     color: white;
 }
 
-#pay-btn {
-    display: none !important;
-}
-
 .cart {
     justify-self: flex-end;
     padding-right: 8px;

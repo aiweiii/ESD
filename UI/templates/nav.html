@@ -1,6 +1,6 @@
 <div class="container">
     <nav class="navbar">
-        <a href="/" class="fs-2">the shop.</a>
+        <a href="/" class="fs-2">with love.</a>
         <ul class="nav-links">
             {% if user=="" %}
                 <li><a href="/login" class="fs-5">Login</a></li>
@@ -35,7 +35,7 @@
                             <span id="cart-total-value"></span>
                         </div>
                         <div class="d-grid gap-2 col-4 mx-auto my-3">
-                            <button class="btn btn-primary" type="button">Pay Now</button>
+                            <button class="btn btn-primary" type="button" display="none" id="pay-btn">Pay Now</button>
                         </div>
 
                     </div>
