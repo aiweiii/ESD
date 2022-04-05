@@ -76,6 +76,7 @@ function loadJSON(){
                                         <div class="card-body">
                                             <h5 class="card-title text-center" id="shop-item-title">${item.productName}</h5>
                                             <p class="card-text text-center text-muted" id="shop-item-price">$${item.itemPrice}</p>
+                                            <p class="card-text text-center text-muted" id="shop-item-quantity">Available Stocks: ${item.quantity}</p>
                                             <div class="d-grid gap-2">
                                                 <a href="/productDetails/${item.id}" class="btn btn-outline-dark"">Details</a>
                                                 <button class="btn add-to-cart-btn" type="button">Add to Cart</button>
@@ -85,7 +86,6 @@ function loadJSON(){
                                 </div>`;
                         });
                         productList.innerHTML = html;
-                        console.log("loadJSON() successful");
 
                     } else if (response.status == 404) {
                         // No books
@@ -118,7 +118,8 @@ function getProductInfo(product){
         id: cartItemID,
         imgSrc: product.querySelector('img').src,
         name: product.querySelector('#shop-item-title').textContent,
-        price: product.querySelector('#shop-item-price').textContent
+        price: product.querySelector('#shop-item-price').textContent,
+        quantity: product.querySelector('#shop-item-quantity').textContent
     }
     cartItemID++;
     addToCartList(productInfo);
@@ -135,6 +136,7 @@ function addToCartList(product){
         <div class = "cart-item-info">
             <h4 class = "cart-item-name">${product.name}</h4>
             <h5 class = "cart-item-price">${product.price}</h5>
+            <h5 class = "cart-item-quantity">${product.quantity}</h5>
         </div>
 
         <button type = "button" class = "cart-item-del-btn">
