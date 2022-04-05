@@ -6,31 +6,31 @@ networks:
   proj-net:
     driver: bridge
 services:
-  #################################
-  # AMQP: Message Broker
-  #################################
-  rabbitmq:
-    networks:
-        - proj-net
-    image: rabbitmq
-    ports:
-      - 5672:5672
-      - 15672:15672
+  # #################################
+  # # AMQP: Message Broker
+  # #################################
+  # rabbitmq:
+  #   networks:
+  #       - proj-net
+  #   image: rabbitmq
+  #   ports:
+  #     - 5672:5672
+  #     - 15672:15672
   
-  #################################
-  # Seller: The seller microservice Python
-  #################################
-  seller:
-    build:
-        context: ./
-        dockerfile: seller.Dockerfile
-    networks:
-        - proj-net
-    image: jialequek2020/seller:1.0
-    environment:
-      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
-    ports:
-      - 9191:5100
+  # #################################
+  # # Seller: The seller microservice Python
+  # #################################
+  # seller:
+  #   build:
+  #       context: ./
+  #       dockerfile: seller.Dockerfile
+  #   networks:
+  #       - proj-net
+  #   image: jialequek2020/seller:1.0
+  #   environment:
+  #     dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+  #   ports:
+  #     - 9191:5100
 
   ################################
   # Customer: The Customer microservice Python
@@ -52,7 +52,7 @@ services:
   # Inventory: The Inventory microservice JAVA
   #################################
   inventory:
-    image: maars505/springinventory:MODIFIABLE
+    image: maars505/springinventory:CORS_CRUD_KONG
     restart: on-failure
     networks:
         - proj-net
@@ -76,6 +76,7 @@ services:
     build:
         context: ./
         dockerfile: ./Order.Dockerfile
+    image: jialequek2020/order:1.0
     networks:
         - proj-net
     restart: on-failure
@@ -120,7 +121,7 @@ services:
         dockerfile: activityLog.Dockerfile
     networks:
         - proj-net
-    image: activitylog/seller:1.0
+    image: jialequek2020/activitylog:1.0
     restart: on-failure
     depends_on:
       - rabbitmq

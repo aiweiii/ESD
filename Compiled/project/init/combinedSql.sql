@@ -8,6 +8,69 @@ COMMIT;
 CREATE DATABASE IF NOT EXISTS `inventory` ;
 GRANT ALL ON `inventory`.* TO 'user'@'%';
 COMMIT;
+{
+    "productName": "WOMEN Pocketable UV Protection Parka",
+    "quantity": 53,
+    "sellerId": 1,
+    "itemPrice": 49,
+    "id": 1
+},
+{
+    "productName": "MEN Smooth Jersey AIRISM Lined Parka",
+    "quantity": 52,
+    "sellerId": 1,
+    "itemPrice": 59,
+    "id": 2
+},
+{
+    "productName": "Pocketable UV Protection Anorak Parka",
+    "quantity": 62,
+    "sellerId": 1,
+    "itemPrice": 49,
+    "id": 3,
+},
+{
+    "productName": "Face Towel",
+    "quantity": 38,
+    "sellerId": 2,
+    "itemPrice": 7,
+    "id": 4
+},
+{
+    "productName": "Ottoman",
+    "quantity": 71,
+    "sellerId": 2,
+    "itemPrice": 129,
+    "id": 5
+},
+{
+    "productName": "Jersey Slippers",
+    "quantity": 41,
+    "sellerId": 2,
+    "itemPrice": 7,
+    "id": 6
+},
+{
+    "productName": "Beats Fit Pro",
+    "quantity": 36,
+    "sellerId": 3,
+    "itemPrice": 299,
+    "id": 7
+},
+{
+    "productName": "Beats Solo3 Wireless Headphones",
+    "quantity": 43,
+    "sellerId": 3,
+    "itemPrice": 279,
+    "id": 8
+},
+{
+    "productName": "Beats Studio Buds",
+    "quantity": 13,
+    "sellerId": 3,
+    "itemPrice": 219,
+    "id": 9
+}
 -- ======================= Inventory END ========================== --
 
 -- ======================= CUSTOMERS ========================== --
