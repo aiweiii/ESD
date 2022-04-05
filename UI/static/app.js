@@ -31,6 +31,9 @@ function eventListeners(){
 
     // delete from cart
     cartList.addEventListener('click', deleteProduct);
+
+    // increment item
+    cartList.addEventListener('click', incrementItem);
 }
 
 // display the PAY NOW button if cart has items
@@ -193,7 +196,7 @@ function findCartInfo(){
 // delete product from cart list and local storage
 function deleteProduct(e){
     let cartItem;
-    if(e.target.tagName === "BUTTON"){
+    if(e.target.className === "cart-item-del-btn"){
         cartItem = e.target.parentElement;
         cartItem.remove(); // this removes from the DOM only
     } else if(e.target.tagName === "I"){
@@ -207,4 +210,8 @@ function deleteProduct(e){
     });
     localStorage.setItem('products', JSON.stringify(updatedProducts)); // updating the product list after the deletion
     updateCartInfo();
+}
+
+// increment quantity
+function incrementItem(e) {
 }
