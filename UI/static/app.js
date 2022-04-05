@@ -7,7 +7,6 @@ const cartTotalValue = document.getElementById('cart-total-value');
 const cartCountInfo = document.getElementById('cart-count-info');
 const cartCountInfoValue = document.getElementById('cart-count-info');
 const payBtn = document.getElementById("pay-btn");
-
 let cartItemID = 1;
 
 
