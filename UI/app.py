@@ -61,11 +61,6 @@ def home():
 def pDesc(itemId):
     return render_template('productDetails.html')
 
-
-@app.route("/cart")
-def cart():
-    return render_template('cart.html')
-
 @app.route("/login")
 def login():
     authorization_url, state = flow.authorization_url()

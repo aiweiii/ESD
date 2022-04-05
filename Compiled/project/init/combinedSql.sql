@@ -8,69 +8,6 @@ COMMIT;
 CREATE DATABASE IF NOT EXISTS `inventory` ;
 GRANT ALL ON `inventory`.* TO 'user'@'%';
 COMMIT;
-{
-    "productName": "WOMEN Pocketable UV Protection Parka",
-    "quantity": 53,
-    "sellerId": 1,
-    "itemPrice": 49,
-    "id": 1
-},
-{
-    "productName": "MEN Smooth Jersey AIRISM Lined Parka",
-    "quantity": 52,
-    "sellerId": 1,
-    "itemPrice": 59,
-    "id": 2
-},
-{
-    "productName": "Pocketable UV Protection Anorak Parka",
-    "quantity": 62,
-    "sellerId": 1,
-    "itemPrice": 49,
-    "id": 3,
-},
-{
-    "productName": "Face Towel",
-    "quantity": 38,
-    "sellerId": 2,
-    "itemPrice": 7,
-    "id": 4
-},
-{
-    "productName": "Ottoman",
-    "quantity": 71,
-    "sellerId": 2,
-    "itemPrice": 129,
-    "id": 5
-},
-{
-    "productName": "Jersey Slippers",
-    "quantity": 41,
-    "sellerId": 2,
-    "itemPrice": 7,
-    "id": 6
-},
-{
-    "productName": "Beats Fit Pro",
-    "quantity": 36,
-    "sellerId": 3,
-    "itemPrice": 299,
-    "id": 7
-},
-{
-    "productName": "Beats Solo3 Wireless Headphones",
-    "quantity": 43,
-    "sellerId": 3,
-    "itemPrice": 279,
-    "id": 8
-},
-{
-    "productName": "Beats Studio Buds",
-    "quantity": 13,
-    "sellerId": 3,
-    "itemPrice": 219,
-    "id": 9
-}
 -- ======================= Inventory END ========================== --
 
 -- ======================= CUSTOMERS ========================== --
@@ -123,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `seller` (
 --
 INSERT INTO `seller` (`sellerID`, `sellerName`, `sellerCtcNo`, `sellerBankAccNo`,`telegramId`,`chatId`) VALUES
 ('1', 'maars', '98989898', '7747332773','maars505',493366384),
-('2', 'liqing', '91919191', '9947733573','lliqing',202631841);
+('2', 'liqing', '91919191', '9947733573','lliqing',202631841),
 ('3', 'aiwei', '92929292', '2347733573','aiwei',503151420);
 COMMIT;
 --
@@ -163,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `order_item` (
   `order_id` INT(11) NOT NULL,
   `sellerID` INT(11) NOT NULL,
   `itemID` INT(11) NOT NULL, 
-  `productName` VARCHAR(32) NOT NULL,
+  `productName` VARCHAR(104) NOT NULL,
   `itemPrice` DECIMAL(5,2) NOT NULL,
   `quantity` INT(11) NOT NULL,
   PRIMARY KEY (`order_item_id`),
