@@ -72,7 +72,7 @@ class Order_Item(db.Model):
         'productName': self.productName, 'itemPrice': self.itemPrice, 'quantity': self.quantity}
 
 
-@app.route("/order")
+@app.route("/order", methods=['GET'])
 def get_all():
 
     print("going into 5001 order route")
@@ -94,7 +94,7 @@ def get_all():
     ), 404
 
 
-@app.route("/order/<string:order_id>")
+@app.route("/order/<string:order_id>", methods=['GET'])
 def find_by_order_id(order_id):
     order = Order.query.filter_by(order_id=order_id).first()
     if order:
@@ -115,7 +115,7 @@ def find_by_order_id(order_id):
     ), 404
 
 
-@app.route("/orderByCustomer/<string:customerid>")
+@app.route("/orderByCustomer/<string:customerid>", methods=['GET'])
 def find_by_customerid(customerid):
     order = Order.query.filter_by(customerID=customerid).all()
     # print()
