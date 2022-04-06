@@ -432,7 +432,7 @@ def processCancelOrder(order):
     for item in items:
         # shd call selller api to get chat id!:
         # {'lliqing': 202631841, 'maars505': 493366384}
-        chatdict = {1: "493366384", 2: "202631841", }
+        chatdict = {1: "493366384", 2: "202631841", 3: "503151420"}
 
         orderItemSellers += [str(chatdict[item["sellerID"]])]
 
