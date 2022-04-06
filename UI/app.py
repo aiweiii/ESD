@@ -57,9 +57,9 @@ def home():
     return render_template("homepage.html", user=user)
 
 
-@app.route("/productDetails/<itemId>")
-def pDesc(itemId):
-    return render_template('productDetails.html')
+@app.route("/paymentConfirmation")
+def paymentConfirmation():
+    return render_template('paymentConfirmation.html')
 
 @app.route("/login")
 def login():
