@@ -78,8 +78,8 @@ function loadJSON(){
                                             <p class="card-text text-center text-muted" id="shop-item-price">$${item.itemPrice}</p>
                                             <p class="card-text text-center text-muted" id="shop-item-quantity">Available Stocks: ${item.quantity}</p>
                                             <div class="d-grid gap-2">
-                                                <a href="/productDetails/${item.id}" class="btn btn-outline-dark"">Details</a>
-                                                <button class="btn add-to-cart-btn" type="button">Add to Cart</button>
+                                                Quantity: <input type="number" min="1" max="${item.quantity}" id="user-quantity" value="1">
+                                                <button class="btn add-to-cart-btn" type="button" id="add-to-cart-btn">Add to Cart</button>
                                             </div>
                                         </div>
                                     </div>
@@ -103,6 +103,23 @@ function loadJSON(){
             });
 }
 
+// check quantity
+function checkQty(product) {
+    let userQty = parseInt(product.userQuantity);
+    let allowedQty = parseInt(product.quantity.split(":")[1])
+
+    // validation of quantity selected
+    if (userQty >= 1 && userQty <= allowedQty) {
+        cartItemID++;
+        addToCartList(product);
+        saveProductInStorage(product);
+
+    } else {
+        document.querySelector(".modal-body").textContent = "Please enter a quantity between 1 and " + allowedQty + " :)";
+        $('#exampleModal').modal('show');
+    }
+
+}
 
 // purchase product
 function purchaseProduct(e){
@@ -119,11 +136,14 @@ function getProductInfo(product){
         imgSrc: product.querySelector('img').src,
         name: product.querySelector('#shop-item-title').textContent,
         price: product.querySelector('#shop-item-price').textContent,
-        quantity: product.querySelector('#shop-item-quantity').textContent
+        quantity: product.querySelector('#shop-item-quantity').textContent,
+        userQuantity: product.querySelector('#user-quantity').value,
     }
-    cartItemID++;
-    addToCartList(productInfo);
-    saveProductInStorage(productInfo);
+
+    checkQty(productInfo)
+    // cartItemID++;
+    // addToCartList(productInfo);
+    // saveProductInStorage(productInfo);
 }
 
 // add the selected product to the cart list
