@@ -170,43 +170,7 @@ def place_order():
 
     # assuming customer id sent from frontend: -- > 1
     custId = 2
-    requestedCartItems = getAllCartItems(custId)
 
-# checking if item in cart is available in inventory:
-    cart_item = []
-    for i in requestedCartItems:
-        itemInfo = getAllInventoryItems(i["itemId"])
-
-        cartObj = {"itemId": itemInfo["id"],
-            "itemName": itemInfo["productName"],
-            "itemQuantity": itemInfo["quantity"],
-            "sellerId": itemInfo["sellerId"],
-            "itemPrice": itemInfo["itemPrice"],}
-
-        cartObjType = {"itemId": type(itemInfo["id"]),
-            "itemName": type(itemInfo["productName"]),
-            "itemQuantity": type(itemInfo["quantity"]),
-            "sellerId": type(itemInfo["sellerId"]),}
-
-        print(f"cartObjType: {cartObjType}")
-
-        cart_item.append(cartObj)
-        print("")
-        print("")
-
-    print(f"endResultObjects: {cart_item}")
-
-    customerInfo = getCustomerInfo(custId)
-
-    print("")
-
-    if customerInfo['code'] != 200 or len(requestedCartItems) == 0:
-        return { "code": 400, "msg": "invalid fetching of data from one of the three databases"}
-
-    order = {
-    "customer_id": custId,
-    "cart_item": cart_item
-    }
 
     # print(f"the order is going to look like thisssss: {order} ")
     # print()
@@ -214,7 +178,46 @@ def place_order():
 
     if request.is_json:
         try:
-            order = request.get_json()
+            custId = str(request.get_json()["customer_id"])
+            print(f"custId2: {custId}")
+            requestedCartItems = getAllCartItems(custId)
+
+        # checking if item in cart is available in inventory:
+            cart_item = []
+            for i in requestedCartItems:
+                itemInfo = getAllInventoryItems(i["itemId"])
+                print(f"itemInfo fetched: {itemInfo}")
+                cartObj = {"itemId": itemInfo["id"],
+                    "itemName": itemInfo["productName"],
+                    "itemQuantity": itemInfo["quantity"],
+                    "sellerId": itemInfo["sellerId"],
+                    "itemPrice": itemInfo["itemPrice"],}
+
+                cartObjType = {"itemId": type(itemInfo["id"]),
+                    "itemName": type(itemInfo["productName"]),
+                    "itemQuantity": type(itemInfo["quantity"]),
+                    "sellerId": type(itemInfo["sellerId"]),}
+
+                print(f"cartObjType: {cartObjType}")
+
+                cart_item.append(cartObj)
+                print("")
+                print("")
+
+            print(f"endResultObjects: {cart_item}")
+
+            customerInfo = getCustomerInfo(custId)
+
+            print("")
+
+            if customerInfo['code'] != 200 or len(requestedCartItems) == 0:
+                return { "code": 400, "msg": "invalid fetching of data from one of the three databases"}
+
+            order = {
+            "customer_id": custId,
+            "cart_item": cart_item
+            }
+
             order = {
                 "customer_id": custId,
                 "cart_item": cart_item,

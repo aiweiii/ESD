@@ -280,9 +280,9 @@ def callback(channel, method, properties, body): # required signature for the ca
             # print(f"chat id issss: {chatId}")
             formatedMessage4Seller = ""
             for i in items:
-                currItemId = i["itemID"]
-                currItemName = i["productName"]
-                currItemOrderId = i["order_id"]
+                currItemId = str(i["itemID"])
+                currItemName = str(i["productName"])
+                currItemOrderId = str(i["order_id"])
                 formatedMessage4Seller += f"Item with id:{currItemId}, productName: {currItemName}, order id: {currItemOrderId} \n"
 
             formatedMessage4Seller += "have been cancelled!"
