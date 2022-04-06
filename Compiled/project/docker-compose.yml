@@ -101,7 +101,7 @@ services:
   order:
     build:
         context: ./
-        dockerfile: ./Order.Dockerfile
+        dockerfile: ./order.Dockerfile
     image: jialequek2020/order:1.0
     networks:
         - proj-net
