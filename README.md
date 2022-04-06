@@ -12,12 +12,14 @@ It uses 1 composite microservice:
 * Place Order
   <br>Make calls to all the required microservices, consolidate the data, and transform the data before sending it to UI. 
 
-It uses 5 microservices:
+It uses 7 microservices:
 * Customer to handle customer data.
 * Seller to handle seller data.
 * Inventory to handle products.
 * Cart to handle items in cart.
 * Order to process orders.
+* Notification to notify sellers on order cancellation.
+* Activity Log to record order cancellation.
 
 ## Technologies
 
