@@ -31,6 +31,9 @@ function eventListeners(){
 
     // delete from cart
     cartList.addEventListener('click', deleteProduct);
+
+    // user clicks on PAY NOW button
+    payBtn.addEventListener('click', postToCart);
 }
 
 // display the PAY NOW button if cart has items
@@ -141,6 +144,7 @@ function getProductInfo(product){
     }
 
     checkQty(productInfo)
+
     // cartItemID++;
     // addToCartList(productInfo);
     // saveProductInStorage(productInfo);
@@ -154,9 +158,9 @@ function addToCartList(product){
     cartItem.innerHTML = `
         <img src = "${product.imgSrc}" alt = "product image">
         <div class = "cart-item-info">
-            <h4 class = "cart-item-name">${product.name}</h4>
+            <h5 class = "cart-item-name">${product.name}</h5>
             <h5 class = "cart-item-price">${product.price}</h5>
-            <h5 class = "cart-item-quantity">${product.quantity}</h5>
+            <h5 class = "cart-item-quantity">Quantity: ${product.userQuantity}</h5>
         </div>
 
         <button type = "button" class = "cart-item-del-btn">

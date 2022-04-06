@@ -146,7 +146,7 @@ button {
     overflow-y: scroll;
     background: #F7F6F4;
     width: 50%;
-    height: 400px;
+    height: 700px;
     top: 100%;
     left: auto;
     right: 0;
@@ -176,12 +176,12 @@ button {
 /*  */
 .cart-item {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 2fr;
     column-gap: 0.5rem;
-    align-items: center;
+    align-items:center;
     position: relative;
-    padding: 1.2rem 0.6rem;
-    height: 230px;
+    padding: 10px 50px 0px 10px;
+    height: auto;
     border-bottom: 1px solid rgba(0, 0, 0, 0.21);
 }
 
@@ -222,7 +222,7 @@ button {
 }
 
 .cart-item img {
-    width: 150px;
+    width: 120px;
 }
 
 .cart-item-info {
