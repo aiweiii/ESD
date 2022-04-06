@@ -1,10 +1,8 @@
 # ESD with Love
 
 ## About our Project
-An application that allows users to search, purchase and manage items through an e-commerce website
+Our application is an ecommerce platform that holds many sellers, offering users a wide range of items and vendors to purchase from. <br>In our project, the user scenarios we are covering includes adding items to cart by user, purchase of items, and option to cancel order before it has been shipped out.
 
-Customer: Search and purchase items
-Seller: Manage inventory and receive order details
 
 ### Architecture
 It uses Kong API Gateway:
