@@ -33,54 +33,127 @@ function eventListeners(){
     cartList.addEventListener('click', deleteProduct);
 
     // user clicks on PAY NOW button
-    payBtn.addEventListener('click', postToCart);
+    payBtn.addEventListener('click', callMicroservices);
 }
 
-async function postToCart() {
+function callMicroservices() {
     let products = getProductFromStorage();
     let custId = 1;
     let itemId;
     let itemName;
     let itemQuantity;
 
-    for (const product in products) { //try FOR IN if cannot
-        itemId = product.id;
-        // console.log("id:",typeof(product.id));
-        itemName = product.name;
-        // console.log("name:",itemName);
-        itemQuantity = parseInt(product.userQuantity);
-        // console.log("userquantity:",typeof(itemQuantity));
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-    "custId": 2,
-    "itemId": 2,
-    "itemName": "AI WEI",
-    "itemQuantity": 3
-    });
-
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow',
-    mode: 'no-cors'
-    };
-
-    console.log('b')
-    const response_ = await fetch("http://127.0.0.1:9393/addCartItem", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-        console.log('a')
-        return response_;
-    }
-    console.log("c")
-
+    getCustId()
+    postToCart();
+    placeAnOrder();
 
 }
+
+// function getCustId(params) {
+//     name
+// }
+
+
+async function getCust(user) {
+    // Change serviceURL to your own
+    var customerURL = "http://localhost:9292/customers";
+    var findCustomer = customerURL + '/' + user ;
+    console.log(findCustomer)
+
+    try {
+        const response =
+        await fetch(
+            findCustomer,
+            { method: 'GET' }
+        );
+
+        const result = await response.json();
+        console.log(result)
+
+        if (response.status === 200) {
+
+            var custID = result.data.custID;
+            console.log(custID)
+
+            }
+
+        else if (response.status == 404) {
+            console.log("Response status is 404.")
+            // console.log(createResponse.json().custID)
+        }
+
+        else {
+            throw response.status;
+        }
+
+    } catch (error) {
+        showError(error);
+    }
+};
+
+function showError(message) {
+// Hide the table and button in the event of error
+$('#orderTable').hide();
+
+// Display an error under the main container
+$('#main-container')
+    .append(
+        "<div class='container-sm pt-3'>" +
+        message +
+        "</div>"
+        );
+}
+
+
+function placeAnOrder() {
+
+}
+
+// function postToCart() {
+//     let products = getProductFromStorage();
+//     let custId = 1;
+//     let itemId;
+//     let itemName;
+//     let itemQuantity;
+
+//     for (const product of products) { //try FOR IN if cannot
+//         itemId = product.id;
+//         // console.log("id:",typeof(product.id));
+//         itemName = product.name;
+//         // console.log("name:",itemName);
+//         itemQuantity = parseInt(product.userQuantity);
+//         // console.log("userquantity:",typeof(itemQuantity));
+
+//         var myHeaders = new Headers();
+//         myHeaders.append("Content-Type", "application/json");
+
+//         var raw = JSON.stringify({
+//         "custId": 2,
+//         "itemId": 2,
+//         "itemName": "AI WEI",
+//         "itemQuantity": 3
+//         });
+
+//         var requestOptions = {
+//         method: 'POST',
+//         headers: myHeaders,
+//         body: raw,
+//         redirect: 'follow',
+//         mode: 'no-cors'
+//         };
+
+//         console.log('b')
+//         fetch("http://127.0.0.1:9393/addCartItem", requestOptions)
+//         .then(response => response.text())
+//         .then(result => console.log(result))
+//         .catch(error => console.log('error', error));
+//         console.log('a')
+//         console.log(requestOptions)
+//     }
+//     console.log("c")
+
+
+// }
 
 // display the PAY NOW button if cart has items
 function updatePayNowDisplay() {
@@ -146,7 +219,6 @@ function loadJSON(){
                 } catch (error) {
                     // Errors when calling the service; such as network error,
                     // service offline, etc
-
                     console.log('There is a problem retrieving product data, please try again later.<br />' + error);
                 } // error
             });
