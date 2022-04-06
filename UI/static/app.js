@@ -1,4 +1,3 @@
-
 // variables and constants
 const cartContainer = document.querySelector('.cart-container');
 const productList = document.querySelector('#product-list');
@@ -37,59 +36,95 @@ function eventListeners(){
 }
 
 function callMicroservices() {
-    let products = getProductFromStorage();
-    let custId = 1;
-    let itemId;
-    let itemName;
-    let itemQuantity;
+    // let products = getProductFromStorage();
+    // let custId;
+    // let itemId;
+    // let itemName;
+    // let itemQuantity;
 
-    getCustId()
-    postToCart();
-    placeAnOrder();
+    custId = parseInt(getCustId());
+    // postToCart();
+    placeOrder(custId);
 
 }
 
-// function getCustId(params) {
-//     name
+// function postToCart() {
+//     var settings = {
+//         // 'cache': false,
+//         'dataType': "json",
+//         // "async": true,
+//         "crossDomain": true,
+//         "url": "http://127.0.0.1:9393/addCartItem",
+//         "method": "POST",
+//         "timeout": 0,
+//         "headers": {
+//             "Content-Type": "application/json",
+//             'Accept': 'application/json',
+//         },
+//         "data": JSON.stringify({
+//             "custId": 4,
+//             "itemId": 4,
+//             "itemName": "aiweiii",
+//             "itemQuantity": 5
+//         }),
+//     };
+
+//     $.ajax(settings).done(function (response) {
+//         console.log(response);
+//     });
 // }
 
+function storeCustIdInSession(custName){
+    $(async () => {
+        var serviceURL = "http://localhost:9292/customers";
+        var findCustomer = serviceURL + '/' + custName ;
+        // console.log("findCustomer url:",findCustomer);
 
-async function getCust(user) {
-    // Change serviceURL to your own
-    var customerURL = "http://localhost:9292/customers";
-    var findCustomer = customerURL + '/' + user ;
-    console.log(findCustomer)
+        try {
+            const response =
+                await fetch(
+                    findCustomer, { method: 'GET' }
+                );
+            const result = await response.json();
+            // console.log("result:",result)
 
-    try {
-        const response =
-        await fetch(
-            findCustomer,
-            { method: 'GET' }
-        );
 
-        const result = await response.json();
-        console.log(result)
+            if (response.status === 200) {
+                // success case
+                console.log("customer already in database")
+                var custID = result.data.custID;
+                window.sessionStorage.setItem(custName, custID);
 
-        if (response.status === 200) {
-
-            var custID = result.data.custID;
-            console.log(custID)
-
+            } else if (response.status == 404) {
+                // No customers
+                console.log("creating database");
+                const createResponse = await createCustomer('', custName);
+                storeCustIdInSession(custName)
+            } else {
+                // unexpected outcome, throw the error
+                throw response.status;
             }
+        } catch (error) {
+            // Errors when calling the service; such as network error,
+            // service offline, etc
+            console.log('There is a problem retrieving customer data, please try again later.<br />' + error);
+        } // error
+    });
+}
 
-        else if (response.status == 404) {
-            console.log("Response status is 404.")
-            // console.log(createResponse.json().custID)
-        }
-
-        else {
-            throw response.status;
-        }
-
-    } catch (error) {
-        showError(error);
+function getCustId() {
+    if (document.getElementById("loginRef").firstElementChild.className == 'loginList') {
+        document.querySelector(".modal-body").textContent = "Kindly login to proceed.";
+        $('#exampleModal').modal('show');
+    } else {
+        // means classname == dropdown
+        // customer has already logged in
+        // run async function
+        let custName =document.getElementById("googleUsername").firstElementChild.innerText;
+        storeCustIdInSession(custName)
+        return window.sessionStorage.getItem(custName)
     }
-};
+}
 
 function showError(message) {
 // Hide the table and button in the event of error
@@ -104,56 +139,27 @@ $('#main-container')
         );
 }
 
+function placeOrder(custId) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-function placeAnOrder() {
+    var raw = JSON.stringify({
+    "customer_id": 10
+    });
 
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    fetch("http://127.0.0.1:9696/place_order", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
 }
 
-// function postToCart() {
-//     let products = getProductFromStorage();
-//     let custId = 1;
-//     let itemId;
-//     let itemName;
-//     let itemQuantity;
-
-//     for (const product of products) { //try FOR IN if cannot
-//         itemId = product.id;
-//         // console.log("id:",typeof(product.id));
-//         itemName = product.name;
-//         // console.log("name:",itemName);
-//         itemQuantity = parseInt(product.userQuantity);
-//         // console.log("userquantity:",typeof(itemQuantity));
-
-//         var myHeaders = new Headers();
-//         myHeaders.append("Content-Type", "application/json");
-
-//         var raw = JSON.stringify({
-//         "custId": 2,
-//         "itemId": 2,
-//         "itemName": "AI WEI",
-//         "itemQuantity": 3
-//         });
-
-//         var requestOptions = {
-//         method: 'POST',
-//         headers: myHeaders,
-//         body: raw,
-//         redirect: 'follow',
-//         mode: 'no-cors'
-//         };
-
-//         console.log('b')
-//         fetch("http://127.0.0.1:9393/addCartItem", requestOptions)
-//         .then(response => response.text())
-//         .then(result => console.log(result))
-//         .catch(error => console.log('error', error));
-//         console.log('a')
-//         console.log(requestOptions)
-//     }
-//     console.log("c")
-
-
-// }
 
 // display the PAY NOW button if cart has items
 function updatePayNowDisplay() {
@@ -315,7 +321,7 @@ function loadCart(){
     }
     products.forEach(product => addToCartList(product));
 
-    // calculate and update UI of cart info 
+    // calculate and update UI of cart info
     updateCartInfo();
 }
 

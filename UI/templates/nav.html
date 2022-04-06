@@ -1,12 +1,12 @@
 <div class="container">
     <nav class="navbar">
         <a href="/" class="fs-2">with love.</a>
-        <ul class="nav-links">
+        <ul class="nav-links" id="loginRef">
             {% if user=="" %}
-                <li><a href="/login" class="fs-5">Login</a></li>
+                <li class="loginList"><a href="/login" class="fs-5">Login</a></li>
             
             {% else %}
-                <li class="dropdown">
+                <li class="dropdown" id="googleUsername">
                     <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ user }}
                     </button>
@@ -41,7 +41,7 @@
                             <span id="cart-total-value"></span>
                         </div>
                         <div class="d-grid gap-2 col-4 mx-auto my-3">
-                            <a href="/paymentConfirmation" class="btn btn-primary" type="link" id="pay-btn">Pay Now</a>
+                            <a href="#" class="btn btn-primary" type="link" id="pay-btn">Pay Now</a>
                             <!-- <button class="btn btn-primary" type="button" display="none" id="pay-btn">Pay Now</button> -->
                         </div>
 

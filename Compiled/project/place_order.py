@@ -124,8 +124,6 @@ SELLERURL = environ.get('SELLERURL')
 ORDERURL = environ.get('ORDERURL') + "order"
 
 
-
-
 def getAllCartItems(customerId):
     url = CARTURL + "cart/" + str(customerId)
     response = requests.request("GET", url, headers={}, data={}).json()

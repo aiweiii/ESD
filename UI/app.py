@@ -57,9 +57,9 @@ def home():
     return render_template("homepage.html", user=user)
 
 
-@app.route("/paymentConfirmation")
-def paymentConfirmation():
-    return render_template('paymentConfirmation.html')
+# @app.route("/paymentConfirmation")
+# def paymentConfirmation():
+#     return render_template('paymentConfirmation.html')
 
 @app.route("/login")
 def login():
@@ -102,7 +102,7 @@ def logout():
 def orderpage():
     user = session["name"]
     pic = session["photo"]
-    
+
     return render_template("orderhistory.html", user=user, pic=pic)
 
 @app.route("/editprofile") #homepage or whatever that needs to have the user login then can see
