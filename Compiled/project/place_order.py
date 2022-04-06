@@ -419,7 +419,7 @@ def processCancelOrder(order):
     # order_result = invoke_http(order_URL, method='POST', json=order)
 
     
-    order_data = invoke_http(ORDERURL + "/" + order["id"], method='GET')
+    order_data = invoke_http(ORDERURL + "/" + str(order["id"]), method='GET')
     print(f"got the cancelled order_data: {order_data}")
 
 
@@ -432,7 +432,7 @@ def processCancelOrder(order):
     for item in items:
         # shd call selller api to get chat id!:
         # {'lliqing': 202631841, 'maars505': 493366384}
-        chatdict = {1: "493366384", 2: "202631841", }
+        chatdict = {1: "493366384", 2: "202631841", 3: "503151420"}
 
         orderItemSellers += [str(chatdict[item["sellerID"]])]
 

@@ -25,14 +25,14 @@ public List<Cart> getAllCartRows()
 }
 
 //getting items in a cart by using the method findByCustId()
-public List<Cart> getCartByCustId(String custId)
+public List<Cart> getCartByCustId(int custId)
 {
     List<Cart> cartRow = cartRepository.findByCustId(custId);
     return cartRow;
 }
 
 //getting a specific record by using the method findById() of CrudRepository
-public Optional<Cart> getAnItemByCartId(String custId, String itemId)
+public Optional<Cart> getAnItemByCartId(int custId, int itemId)
 {
     Optional <Cart> cartRow = cartRepository.findByCustIdAndItemId(custId, itemId);
     return cartRow;
@@ -45,7 +45,7 @@ public void saveOrUpdate(Cart cartItem)
 }
 
 //deleting a specific record by using the method deleteById() of CrudRepository
-public void deleteCartItem(String custId, String itemId)
+public void deleteCartItem(int custId, int itemId)
 {
     Optional <Cart> cartItem = cartRepository.findByCustIdAndItemId(custId, itemId);
     try{
@@ -57,7 +57,7 @@ public void deleteCartItem(String custId, String itemId)
 }
 
 //deleting record of the specified custId
-public void deleteCart(String custId) {
+public void deleteCart(int custId) {
 
     List<Cart> cartRows = cartRepository.findByCustId(custId);
     cartRepository.deleteAll(cartRows);

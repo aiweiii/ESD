@@ -4,6 +4,6 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class CompositeKey implements Serializable {
-    private String custId;
-    private String itemId;
+    private int custId;
+    private int itemId;
 }

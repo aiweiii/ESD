@@ -31,6 +31,55 @@ function eventListeners(){
 
     // delete from cart
     cartList.addEventListener('click', deleteProduct);
+
+    // user clicks on PAY NOW button
+    payBtn.addEventListener('click', postToCart);
+}
+
+async function postToCart() {
+    let products = getProductFromStorage();
+    let custId = 1;
+    let itemId;
+    let itemName;
+    let itemQuantity;
+
+    for (const product in products) { //try FOR IN if cannot
+        itemId = product.id;
+        // console.log("id:",typeof(product.id));
+        itemName = product.name;
+        // console.log("name:",itemName);
+        itemQuantity = parseInt(product.userQuantity);
+        // console.log("userquantity:",typeof(itemQuantity));
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+    "custId": 2,
+    "itemId": 2,
+    "itemName": "AI WEI",
+    "itemQuantity": 3
+    });
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+    mode: 'no-cors'
+    };
+
+    console.log('b')
+    const response_ = await fetch("http://127.0.0.1:9393/addCartItem", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+        console.log('a')
+        return response_;
+    }
+    console.log("c")
+
+
 }
 
 // display the PAY NOW button if cart has items
@@ -141,6 +190,7 @@ function getProductInfo(product){
     }
 
     checkQty(productInfo)
+
     // cartItemID++;
     // addToCartList(productInfo);
     // saveProductInStorage(productInfo);
@@ -154,9 +204,9 @@ function addToCartList(product){
     cartItem.innerHTML = `
         <img src = "${product.imgSrc}" alt = "product image">
         <div class = "cart-item-info">
-            <h4 class = "cart-item-name">${product.name}</h4>
+            <h5 class = "cart-item-name">${product.name}</h5>
             <h5 class = "cart-item-price">${product.price}</h5>
-            <h5 class = "cart-item-quantity">${product.quantity}</h5>
+            <h5 class = "cart-item-quantity">Quantity: ${product.userQuantity}</h5>
         </div>
 
         <button type = "button" class = "cart-item-del-btn">
