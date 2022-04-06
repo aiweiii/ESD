@@ -30,20 +30,20 @@ public class CartController {
 
     //creating a get mapping that retrieves the detail of a specific book
     @GetMapping("/cart/{custId}/{itemId}")
-    private Optional<Cart> getACartItem(@PathVariable("custId") String custId, @PathVariable("itemId") String itemId)
+    private Optional<Cart> getACartItem(@PathVariable("custId") int custId, @PathVariable("itemId") int itemId)
     {
         return cartService.getAnItemByCartId(custId, itemId);
     }
 
     @GetMapping("/cart/{custId}")
-    private List<Cart> getACart(@PathVariable("custId") String custId)
+    private List<Cart> getACart(@PathVariable("custId") int custId)
     {
         return cartService.getCartByCustId(custId);
     }
 
     //creating a delete mapping that deletes a specified item in cart
     @DeleteMapping("/deleteCartItem/{custId}/{itemId}")
-    private String deleteCartItem(@PathVariable("custId") String custId, @PathVariable("itemId") String itemId)
+    private String deleteCartItem(@PathVariable("custId") int custId, @PathVariable("itemId") int itemId)
     {
         cartService.deleteCartItem(custId, itemId);
         return "Deleted item: custId-" + custId + "; itemId-" + itemId;
@@ -51,7 +51,7 @@ public class CartController {
 
     //creating a delete mapping that deletes a specified cart
     @DeleteMapping("/deleteCart/{custId}")
-    private String deleteCart(@PathVariable("custId") String custId)
+    private int deleteCart(@PathVariable("custId") int custId)
     {
         cartService.deleteCart(custId);
         return custId;
