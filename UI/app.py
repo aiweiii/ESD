@@ -43,7 +43,7 @@ def login_is_required(function):
             return render_template("error.html")  # Authorization required
         else:
             return function()
-
+    wrapper.__name__ = function.__name__
     return wrapper
 
 #------------------ routing ------------------------#
@@ -104,12 +104,18 @@ def logout():
 
 @app.route("/orderhistory") #homepage or whatever that needs to have the user login then can see
 @login_is_required
-
 def orderpage():
     user = session["name"]
     pic = session["photo"]
     
     return render_template("orderhistory.html", user=user, pic=pic)
+
+@app.route("/editprofile") #homepage or whatever that needs to have the user login then can see
+@login_is_required
+def profile():
+    user = session["name"]
+    pic = session["photo"]
+    return render_template("editprofile.html", user=user, pic=pic)
 
 if __name__ == "__main__":
     # app.run(debug=True)
