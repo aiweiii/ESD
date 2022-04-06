@@ -2,7 +2,6 @@ async function getCust(user) {
     // Change serviceURL to your own
     var customerURL = "http://localhost:9292/customers";
     var findCustomer = customerURL + '/' + user ;
-    console.log(findCustomer)
     
     try {
         const response =
@@ -17,16 +16,14 @@ async function getCust(user) {
         if (response.status === 200) {
         
             var custID = result.data.custID;
-            console.log( result.data.custAddress)
+            // console.log( result.data.custAddress)
             getOrders(custID);
             
             } 
         
-        else if (response.status == 404) {
-            const createResponse = await createCustomer('', '{{user}}');
-
+        else if (response.status === 404) {
+            const createResponse = await createCustomer('', user);
             console.log(createResponse.json().custID)
-
         }
 
         else {
@@ -74,6 +71,42 @@ async function createCustomer(address, name){
         return response_;
 };
 
+async function cancelOrders(orderID) {
+    var cancelURL = "http://localhost:9696/cancelOrder";
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+    "id": orderID
+    });
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    const cancelResponse = await fetch(cancelURL, requestOptions)
+    // .then(response => response.text())
+    // .then(result => console.log(result))
+    // .catch(error => console.log('error', error));
+    
+    const cancelled = await cancelResponse.json();
+    
+    if (cancelResponse.status === 200) {
+        alert(cancelled.message);
+        document.getElementById("orderstatus").innerText = 'Cancelled';
+        // window.location.href = "http://localhost:3000/orderhistory";
+    } else {
+        alert(cancelled.message);
+        window.location.href = "http://localhost:3000/orderhistory";
+
+    }
+
+};
+
+
 async function getOrders(custID) {
     
     // var customerOrderURL = "http://localhost:9494/orderByCustomer/" + custID;
@@ -87,18 +120,37 @@ async function getOrders(custID) {
             var order = orders.data[i];
             order_details = order.order_item;
             
-            var rows = "";
+            var orders_length = order_details.length
+            var rows = "<tr><td rowspan=" + orders_length +">" + order_details[0].order_id + "</td>";
+            var button = "";
+
+            if (order.status !== 'Shipped') {
+                button = " <button class='btn btn-primary btn-sm' onclick='cancelOrders(" +
+                order_details[0].order_id + ")'> Cancel order </button>";
+            } else {
+                button = " <button class='btn btn-primary btn-sm disabled'> Cancel order </button>";
+            }
 
             for (j in order_details) {
                 sellername = await getSeller(order_details[0].sellerID)
-                eachRow = "<td>" + order_details[j].order_id + "</td>" +
-                            "<td>" + order_details[j].productName + "</td>" +
-                            "<td>" + sellername + "</td>" +
-                            "<td>" + order.status + "</td>";
-                rows += "<tr>" + eachRow + "</tr>";
+                var imgFileName = "static/images/" + order_details[j].order_item_id + "-1.jpeg";
 
-            } $('#orderTable').append(rows);
-            console.log(rows)
+                eachRow = "<td> <img style='height: 100px' src=" + imgFileName +"> " + 
+                            order_details[j].productName + "</td>" +
+                            "<td>" + order_details[j].quantity + "</td>" +
+                            "<td>" + sellername + "</td>";
+
+                if (j == 0) {
+                    eachRow += "<td id='orderstatus' rowspan=" + orders_length +">" + order.status  + "</td>"+ 
+                                "<td rowspan=" + orders_length +">" + button + "</td>";
+                } 
+
+                rows += eachRow + "</tr>";
+
+            } 
+        
+            $('#orderTable').append(rows);
+
         } 
     } else if (orderResponse.status == 404) {
 

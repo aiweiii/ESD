@@ -1,10 +1,8 @@
 # ESD with Love
 
 ## About our Project
-An application that allows users to search, purchase and manage items through an e-commerce website
+Our application is an ecommerce platform that holds many sellers, offering users a wide range of items and vendors to purchase from. <br>In our project, the user scenarios we are covering includes adding items to cart by user, purchase of items, and option to cancel order before it has been shipped out.
 
-Customer: Search and purchase items
-Seller: Manage inventory and receive order details
 
 ### Architecture
 It uses Kong API Gateway:
@@ -14,12 +12,14 @@ It uses 1 composite microservice:
 * Place Order
   <br>Make calls to all the required microservices, consolidate the data, and transform the data before sending it to UI. 
 
-It uses 5 microservices:
+It uses 7 microservices:
 * Customer to handle customer data.
 * Seller to handle seller data.
 * Inventory to handle products.
 * Cart to handle items in cart.
 * Order to process orders.
+* Notification to notify sellers on order cancellation.
+* Activity Log to record order cancellation.
 
 ## Technologies
 
