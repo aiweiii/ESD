@@ -419,7 +419,7 @@ def processCancelOrder(order):
     # order_result = invoke_http(order_URL, method='POST', json=order)
 
     
-    order_data = invoke_http(ORDERURL + "/" + order["id"], method='GET')
+    order_data = invoke_http(ORDERURL + "/" + str(order["id"]), method='GET')
     print(f"got the cancelled order_data: {order_data}")
 
 
