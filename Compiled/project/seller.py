@@ -7,15 +7,11 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 CORS(app)
 
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/seller'
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-
-#db.Column(db.Float(precision=2), nullable=False)
 class Seller(db.Model):
     __tablename__ = 'seller'
 
@@ -105,7 +101,7 @@ def create_seller():
         } 
     ), 201
 
-# update customer info
+# update seller info
 @app.route("/sellers/<string:sellerID>", methods=['PUT'])
 def update_seller(sellerID):
     try:
@@ -138,7 +134,7 @@ def update_seller(sellerID):
             {
                 "code": 200,
                 "data": seller.json(), 
-                "message": "Successfully updated customer information"
+                "message": "Successfully updated seller information"
             }
         )
     except Exception as e:
@@ -148,7 +144,7 @@ def update_seller(sellerID):
                 "data": {
                     "sellerID": sellerID
                 },
-                "message": "An error occurred while updating customer's information. " + str(e)
+                "message": "An error occurred while updating seller's information. " + str(e)
             }
         ), 500
 

@@ -50,9 +50,9 @@ def login_is_required(function):
 
 @app.route("/")
 def home():
-    if "google_id" in session: 
+    if "google_id" in session:
         user = session["name"]
-    else: 
+    else:
         user = ""
     return render_template("homepage.html", user=user)
 
@@ -60,11 +60,6 @@ def home():
 @app.route("/productDetails/<itemId>")
 def pDesc(itemId):
     return render_template('productDetails.html')
-
-
-@app.route("/cart")
-def cart():
-    return render_template('cart.html')
 
 @app.route("/login")
 def login():

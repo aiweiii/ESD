@@ -5,6 +5,8 @@ const productList = document.querySelector('#product-list');
 const cartList = document.querySelector('.cart-list');
 const cartTotalValue = document.getElementById('cart-total-value');
 const cartCountInfo = document.getElementById('cart-count-info');
+const cartCountInfoValue = document.getElementById('cart-count-info');
+const payBtn = document.getElementById("pay-btn");
 let cartItemID = 1;
 
 
@@ -20,6 +22,8 @@ function eventListeners(){
     // show/hide cart container
     document.getElementById('cart-btn').addEventListener('click', () => {
         cartContainer.classList.toggle('show-cart-container');
+        $(document.getElementById("overlay")).toggle($(".show-cart-container").is(':visible'));
+
     });
 
     // add to cart
@@ -29,11 +33,23 @@ function eventListeners(){
     cartList.addEventListener('click', deleteProduct);
 }
 
+// display the PAY NOW button if cart has items
+function updatePayNowDisplay() {
+    var numOfItemsInCart = JSON.parse(localStorage.getItem('products')).length
+    if (numOfItemsInCart > 0) {
+        payBtn.style.display='inline';
+    } else {
+        payBtn.style.display='none';
+    }
+}
+
+
 // update cart info
 function updateCartInfo(){
     let cartInfo = findCartInfo();
     cartCountInfo.textContent = cartInfo.productCount;
     cartTotalValue.textContent = cartInfo.total;
+    updatePayNowDisplay()
 }
 
 // load product items content form JSON file
@@ -50,7 +66,7 @@ function loadJSON(){
                     if (response.status === 200) {
                         // success case
                         var items = result;
-                        // window.localStorage.setItem("items", JSON.stringify(items))
+
                         let html = '';
                         items.forEach(item => {
                             var imgFileName = "static/images/" + item.id + "-1.jpeg";
@@ -60,17 +76,16 @@ function loadJSON(){
                                         <div class="card-body">
                                             <h5 class="card-title text-center" id="shop-item-title">${item.productName}</h5>
                                             <p class="card-text text-center text-muted" id="shop-item-price">$${item.itemPrice}</p>
+                                            <p class="card-text text-center text-muted" id="shop-item-quantity">Available Stocks: ${item.quantity}</p>
                                             <div class="d-grid gap-2">
-                                                <a href="/productDetails/${item.id}" class="btn btn-outline-dark"">Details</a>
-                                                <button class="btn add-to-cart-btn" type="button">Add to Cart</button>
+                                                Quantity: <input type="number" min="1" max="${item.quantity}" id="user-quantity" value="1">
+                                                <button class="btn add-to-cart-btn" type="button" id="add-to-cart-btn">Add to Cart</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>`;
-                            // document.getElementById("product-list").innerHTML += card;
                         });
                         productList.innerHTML = html;
-                        console.log("loadJSON() successful");
 
                     } else if (response.status == 404) {
                         // No books
@@ -88,11 +103,27 @@ function loadJSON(){
             });
 }
 
+// check quantity
+function checkQty(product) {
+    let userQty = parseInt(product.userQuantity);
+    let allowedQty = parseInt(product.quantity.split(":")[1])
+
+    // validation of quantity selected
+    if (userQty >= 1 && userQty <= allowedQty) {
+        cartItemID++;
+        addToCartList(product);
+        saveProductInStorage(product);
+
+    } else {
+        document.querySelector(".modal-body").textContent = "Please enter a quantity between 1 and " + allowedQty + " :)";
+        $('#exampleModal').modal('show');
+    }
+
+}
 
 // purchase product
 function purchaseProduct(e){
     if(e.target.classList.contains('add-to-cart-btn')){
-        console.log("entered purchaseProduct()");
         let product = e.target.parentElement.parentElement.parentElement;
         getProductInfo(product);
     }
@@ -104,13 +135,15 @@ function getProductInfo(product){
         id: cartItemID,
         imgSrc: product.querySelector('img').src,
         name: product.querySelector('#shop-item-title').textContent,
-        category: product.querySelector('#shop-item-title').textContent, //change this to something else later
-        price: product.querySelector('#shop-item-price').textContent
+        price: product.querySelector('#shop-item-price').textContent,
+        quantity: product.querySelector('#shop-item-quantity').textContent,
+        userQuantity: product.querySelector('#user-quantity').value,
     }
-    cartItemID++;
-    console.log("successfully generated item details for one product")
-    addToCartList(productInfo);
-    saveProductInStorage(productInfo);
+
+    checkQty(productInfo)
+    // cartItemID++;
+    // addToCartList(productInfo);
+    // saveProductInStorage(productInfo);
 }
 
 // add the selected product to the cart list
@@ -121,9 +154,9 @@ function addToCartList(product){
     cartItem.innerHTML = `
         <img src = "${product.imgSrc}" alt = "product image">
         <div class = "cart-item-info">
-            <h3 class = "cart-item-name">${product.name}</h3>
-            <span class = "cart-item-category">${product.category}</span>
-            <span class = "cart-item-price">${product.price}</span>
+            <h4 class = "cart-item-name">${product.name}</h4>
+            <h5 class = "cart-item-price">${product.price}</h5>
+            <h5 class = "cart-item-quantity">${product.quantity}</h5>
         </div>
 
         <button type = "button" class = "cart-item-del-btn">
@@ -131,6 +164,7 @@ function addToCartList(product){
         </button>
     `;
     cartList.appendChild(cartItem);
+
 }
 
 // save the product in the local storage
@@ -150,7 +184,6 @@ function getProductFromStorage(){
 // load carts product
 function loadCart(){
     let products = getProductFromStorage();
-    console.log(products.length);
     if(products.length < 1){
         cartItemID = 1; // if there is no any product in the local storage
     } else {
@@ -180,7 +213,7 @@ function findCartInfo(){
 // delete product from cart list and local storage
 function deleteProduct(e){
     let cartItem;
-    if(e.target.tagName === "BUTTON"){
+    if(e.target.className === "cart-item-del-btn"){
         cartItem = e.target.parentElement;
         cartItem.remove(); // this removes from the DOM only
     } else if(e.target.tagName === "I"){
