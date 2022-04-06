@@ -75,7 +75,7 @@ services:
   # Cart: The Cart microservice JAVA
   #################################
   cart:
-    image: maars505/cartapp:MODIFIABLE
+    image: maars505/cartapp:MODIFIABLE2
     restart: on-failure
     networks:
         - proj-net
@@ -101,7 +101,7 @@ services:
   order:
     build:
         context: ./
-        dockerfile: ./Order.Dockerfile
+        dockerfile: ./order.Dockerfile
     image: jialequek2020/order:1.0
     networks:
         - proj-net
@@ -132,7 +132,7 @@ services:
       CUSTOMERURL: http://host.docker.internal:9292/
       SELLERURL: http://host.docker.internal:9191/
       ORDERURL: http://host.docker.internal:9494/
-      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3308/sellers
     ports:
       - 9696:5100
 

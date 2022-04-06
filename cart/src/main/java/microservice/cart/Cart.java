@@ -8,25 +8,25 @@ import javax.persistence.IdClass;
 @IdClass(CompositeKey.class)
 public class Cart {
     @Id
-    private String custId;
+    private int custId;
     @Id
-    private String itemId;
+    private int itemId;
     private String itemName;
     private int itemQuantity;
 
-    public String getCustId() {
+    public int getCustId() {
         return custId;
     }
 
-    public void setCustId(String custId) {
+    public void setCustId(int custId) {
         this.custId = custId;
     }
 
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 

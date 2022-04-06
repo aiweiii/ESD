@@ -28,7 +28,7 @@ class Customers(db.Model):
         return {"custID": self.custID, "custName": self.custName, "custAddress": self.custAddress}
 
 #get all
-@app.route("/customers")
+@app.route("/customers", methods=['GET'])
 def get_all():
     custList = Customers.query.all()
     if len(custList):
@@ -47,8 +47,8 @@ def get_all():
         }
     ), 404
 
-#get customer by ID
-@app.route("/customers/<string:custName>")
+#get customer by custName
+@app.route("/customers/<string:custName>", methods=['GET'])
 def find_by_custName(custName):
     customer = Customers.query.filter_by(custName=custName).first()
     if customer:
@@ -65,6 +65,23 @@ def find_by_custName(custName):
         }
     ), 404
 
+#get customer by ID
+@app.route("/customers/<int:custID>", methods=['GET'])
+def find_by_custID(custID):
+    customer = Customers.query.filter_by(custID=custID).first()
+    if customer:
+        return jsonify(
+            {
+                "code": 200,
+                "data": customer.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Customer not found."
+        }
+    ), 404
 
 #create customer 
 @app.route("/customers/createCustomers", methods=['POST'])
