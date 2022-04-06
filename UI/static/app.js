@@ -31,9 +31,6 @@ function eventListeners(){
 
     // delete from cart
     cartList.addEventListener('click', deleteProduct);
-
-    // increment item
-    cartList.addEventListener('click', incrementItem);
 }
 
 // display the PAY NOW button if cart has items
@@ -210,8 +207,4 @@ function deleteProduct(e){
     });
     localStorage.setItem('products', JSON.stringify(updatedProducts)); // updating the product list after the deletion
     updateCartInfo();
-}
-
-// increment quantity
-function incrementItem(e) {
 }
