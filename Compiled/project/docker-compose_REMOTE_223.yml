@@ -1,0 +1,239 @@
+version: "3.9"
+volumes:
+  pgdata:
+  kongadata:
+networks:
+  proj-net:
+    driver: bridge
+services:
+  #################################
+  # AMQP: Message Broker
+  #################################
+  rabbitmq:
+    networks:
+        - proj-net
+    image: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  
+  #################################
+  # Seller: The seller microservice Python
+  #################################
+  seller:
+    build:
+        context: ./
+        dockerfile: seller.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/seller:1.0
+    environment:
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9191:5100
+
+  ################################
+  # Customer: The Customer microservice Python
+  ################################
+  customer:
+    build:
+        context: ./
+        dockerfile: customer.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/customer:1.0
+    environment:
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/customers
+    ports:
+    - 9292:5000
+
+  #################################
+  # Inventory: The Inventory microservice JAVA
+  #################################
+  inventory:
+    image: maars505/springinventory:CORS_CRUD_KONG
+    restart: on-failure
+    networks:
+        - proj-net
+    depends_on:
+      - konga
+      - kong-database
+      - kong-migration
+      - kong
+    environment:
+      - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - OPENSHIFT_MYSQL_DB_PORT=3308
+      - OPENSHIFT_MYSQL_DB_NAME=inventory
+    mem_limit: 750m
+    mem_reservation: 700m
+    ports:
+      - 9090:8080
+
+  #################################
+  # Cart: The Cart microservice JAVA
+  #################################
+  cart:
+    image: maars505/cartapp:MODIFIABLE
+    restart: on-failure
+    networks:
+        - proj-net
+    depends_on:
+      - konga
+      - kong-database
+      - kong-migration
+      - kong
+    environment:
+      - OPENSHIFT_MYSQL_DB_HOST=host.docker.internal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - OPENSHIFT_MYSQL_DB_PORT=3308
+      - OPENSHIFT_MYSQL_DB_NAME=cart
+    mem_limit: 750m
+    mem_reservation: 700m
+    ports:
+      - 9393:8080
+  
+  #################################
+  # order: The order microservice Python
+  #################################
+  order:
+    build:
+        context: ./
+        dockerfile: ./Order.Dockerfile
+    image: jialequek2020/order:1.0
+    networks:
+        - proj-net
+    restart: on-failure
+    depends_on:
+      - cart
+    environment:
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/order
+    ports:
+      - 9494:5001
+
+  #################################
+  # place_order: The order microservice Python
+  #################################
+  place_order:
+    build:
+        context: ./
+        dockerfile: placeOrder.Dockerfile
+    restart: on-failure
+    networks:
+        - proj-net
+    image: jialequek2020/placeorder:1.0
+    depends_on:
+      - cart
+    environment:
+      CARTURL: http://host.docker.internal:9393/
+      INVENTORYURL: http://host.docker.internal:9090/
+      CUSTOMERURL: http://host.docker.internal:9292/
+      SELLERURL: http://host.docker.internal:9191/
+      ORDERURL: http://host.docker.internal:9494/
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9696:5100
+
+  #################################
+  # activitylog: The activitylog microservice Python
+  #################################
+  activitylog:
+    build:
+        context: ./
+        dockerfile: activityLog.Dockerfile
+    networks:
+        - proj-net
+    image: jialequek2020/activitylog:1.0
+    restart: on-failure
+    depends_on:
+      - cart
+    environment:
+      SELLERURL: http://host.docker.internal:9191/
+      dbURL: mysql+mysqlconnector://root:root@host.docker.internal:3308/sellers
+    ports:
+      - 9595:5100
+
+  #######################################
+  # Postgres: The database used by Kong
+  #######################################
+  kong-database:
+    image: postgres:9.6
+    platform: linux/amd64
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      POSTGRES_DB: kong
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  #######################################
+  # Kong database migration
+  #######################################
+  kong-migration:
+    image: kong:2.0.4
+    platform: linux/amd64
+    command: "kong migrations bootstrap"
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: password
+    depends_on:
+      - kong-database
+  
+  #######################################
+  # Kong: The API Gateway
+  #######################################
+  kong:
+    image: kong:2.0.4
+    platform: linux/amd64
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: password
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    depends_on:
+      - kong-migration
+    ports:
+      - "8000:8000"
+  
+  #######################################
+  # Konga: Kong GUI
+  #######################################
+  konga:
+    image: pantsel/konga
+    restart: on-failure
+    networks:
+      - proj-net
+    environment:
+      DB_ADAPTER: postgres
+      DB_HOST: kong-database
+      DB_USER: kong
+      DB_PASSWORD: password
+      DB_DATABASE: konga_db
+    depends_on:
+      - kong
+    ports:
+      - "1337:1337"
+    volumes:
+      - kongadata:/app/kongadata
