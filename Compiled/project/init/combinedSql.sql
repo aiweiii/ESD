@@ -22,17 +22,16 @@ DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `custID` int(11) NOT NULL AUTO_INCREMENT,
   `custName` varchar(64) NOT NULL,
-  `custAddress` varchar(64) NOT NULL,
-  `custCCNo` int(9) DEFAULT NULL,
+  `custAddress` varchar(64) NULL,
   PRIMARY KEY (`custID`)
 );
 --
 -- Dumping data for table `customers`
 --
-INSERT INTO `customers` (`custID`, `custName`, `custAddress`, `custCCNo`) VALUES
-(1, 'Emma Tan','53 Ang Mo Kio Avenue 3 Singapore 569933', '978112947'),
-(2, 'Yvonne Kim', 'Blk 145 Lorong 2 Toa Payoh Singapore 310145', '978134947'),
-(3, 'Michael Ang', 'Blk 150A Bishan Street 11 Singapore 571150', '978143447');
+INSERT INTO `customers` (`custID`, `custName`, `custAddress`) VALUES
+(1, 'Emma Tan','53 Ang Mo Kio Avenue 3 Singapore 569933'),
+(2, 'Yvonne Kim', 'Blk 145 Lorong 2 Toa Payoh Singapore 310145'),
+(3, 'Michael Ang', 'Blk 150A Bishan Street 11 Singapore 571150');
 COMMIT;
 --
 -- ======================= CUSTOMERS END ========================== --

@@ -17,17 +17,15 @@ class Customers(db.Model):
  
     custID = db.Column(db.String(13), primary_key=True)
     custName = db.Column(db.String(64), nullable=False)
-    custAddress = db.Column(db.String(64), nullable=False)
-    custCCNo = db.Column(db.Integer)
+    custAddress = db.Column(db.String(64), nullable=True)
  
-    def __init__(self, custID, custName, custAddress, custCCNo):
+    def __init__(self, custID, custName, custAddress):
         self.custID = custID
         self.custName = custName
         self.custAddress = custAddress
-        self.custCCNo = custCCNo
  
     def json(self):
-        return {"custID": self.custID, "custName": self.custName, "custAddress": self.custAddress, "custCCNo": self.custCCNo}
+        return {"custID": self.custID, "custName": self.custName, "custAddress": self.custAddress}
 
 #get all
 @app.route("/customers")
@@ -68,7 +66,7 @@ def find_by_custName(custName):
     ), 404
 
 
-#create customer
+#create customer 
 @app.route("/customers/createCustomers", methods=['POST'])
 def create_cust():
  
@@ -118,8 +116,6 @@ def update_cust(custID):
             cust.custName = data['custName']
         if data['custAddress']:
             cust.custAddress = data['custAddress']
-        if data['custCCNo']:
-            cust.custCCNo = data['custCCNo']
         db.session.commit()
         return jsonify(
             {

@@ -115,6 +115,27 @@ def find_by_order_id(order_id):
     ), 404
 
 
+@app.route("/orderByCustomer/<string:customerid>")
+def find_by_customerid(customerid):
+    order = Order.query.filter_by(customerID=customerid).all()
+    # print()
+    if order:
+        return jsonify(
+            {
+                "code": 200,
+                "data": [i.json() for i in order]
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "order_id": customerid
+            },
+            "message": "Order not found."
+        }
+    ), 404
+
 @app.route("/order", methods=['POST'])
 def create_order():
     print(f"reached order endpoint for posting order")
