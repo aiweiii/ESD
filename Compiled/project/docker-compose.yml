@@ -90,8 +90,8 @@ services:
       - DB_PASSWORD=root
       - OPENSHIFT_MYSQL_DB_PORT=3308
       - OPENSHIFT_MYSQL_DB_NAME=cart
-    mem_limit: 750m
-    mem_reservation: 700m
+    mem_limit: 2000m
+    mem_reservation: 2000m
     ports:
       - 9393:8080
   
