@@ -6,6 +6,7 @@ const cartTotalValue = document.getElementById('cart-total-value');
 const cartCountInfo = document.getElementById('cart-count-info');
 const cartCountInfoValue = document.getElementById('cart-count-info');
 const payBtn = document.getElementById("pay-btn");
+const afterLoginPayBtn = document.getElementById("after-login-pay-btn");
 let cartItemID = 1;
 
 
@@ -33,6 +34,8 @@ function eventListeners(){
 
     // user clicks on PAY NOW button
     payBtn.addEventListener('click', callMicroservices);
+
+    afterLoginPayBtn.addEventListener('click',movesToOrderHistory)
 }
 
 function callMicroservices() {
@@ -46,6 +49,12 @@ function callMicroservices() {
     // postToCart();
     placeOrder(custId);
 
+}
+
+function movesToOrderHistory() {
+    // clear local storage
+    window.localStorage.clear()
+    updateCartInfo();
 }
 
 // function postToCart() {
@@ -120,6 +129,9 @@ function getCustId() {
         // means classname == dropdown
         // customer has already logged in
         // run async function
+        payBtn.style.display = 'none';
+        afterLoginPayBtn.style.display = 'inline';
+
         let custName =document.getElementById("googleUsername").firstElementChild.innerText;
         storeCustIdInSession(custName)
         return window.sessionStorage.getItem(custName)

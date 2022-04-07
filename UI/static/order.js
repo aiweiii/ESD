@@ -1,3 +1,25 @@
+
+const failedBtn = document.getElementById('failedBtn');
+const successBtn = document.getElementById('successBtn');
+
+
+successBtn.addEventListener('click', function onClick() {
+    document.querySelector(".modal-body").textContent = "Your order has been successfully cancelled";
+    $('#exampleModal').modal('show');
+
+    successBtn.style.backgroundColor = 'grey';
+    successBtn.style.color = 'black';
+    successBtn.style.borderColor ='black';
+    successBtn.innerText ="Cancelled"
+
+});
+
+failedBtn.addEventListener('click', function onClick() {
+    document.querySelector(".modal-body").textContent = "Order cancellation failure as order has been shipped or already cancelled and cannot be cancelled";
+    $('#exampleModal').modal('show');
+});
+
+
 async function getCust(user) {           
     // Change serviceURL to your own
     var customerURL = "http://localhost:9292/customers";
@@ -17,7 +39,7 @@ async function getCust(user) {
         
             var custID = result.data.custID;
             // console.log( result.data.custAddress)
-            getOrders(custID);
+            // getOrders(custID);
             
             } 
         
@@ -107,62 +129,62 @@ async function cancelOrders(orderID) {
 };
 
 
-async function getOrders(custID) {
+// async function getOrders(custID) {
     
-    // var customerOrderURL = "http://localhost:9494/orderByCustomer/" + custID;
-    var customerOrderURL = "http://localhost:9494/orderByCustomer/1";
-    const orderResponse = await fetch(customerOrderURL);
-    const orders = await orderResponse.json();
+//     // var customerOrderURL = "http://localhost:9494/orderByCustomer/" + custID;
+//     var customerOrderURL = "http://localhost:9494/orderByCustomer/1";
+//     const orderResponse = await fetch(customerOrderURL);
+//     const orders = await orderResponse.json();
     
-    if (orderResponse.status === 200) {
+//     if (orderResponse.status === 200) {
 
-        for (i in orders.data) {
-            var order = orders.data[i];
-            order_details = order.order_item;
+//         for (i in orders.data) {
+//             var order = orders.data[i];
+//             order_details = order.order_item;
             
-            var orders_length = order_details.length
-            var rows = "<tr><td rowspan=" + orders_length +">" + order_details[0].order_id + "</td>";
-            var button = "";
+//             var orders_length = order_details.length
+//             var rows = "<tr><td rowspan=" + orders_length +">" + order_details[0].order_id + "</td>";
+//             var button = "";
 
-            if (order.status !== 'Shipped') {
-                button = " <button class='btn btn-primary btn-sm' onclick='cancelOrders(" +
-                order_details[0].order_id + ")'> Cancel order </button>";
-            } else {
-                button = " <button class='btn btn-primary btn-sm disabled'> Cancel order </button>";
-            }
+//             if (order.status !== 'Shipped') {
+//                 button = " <button class='btn btn-primary btn-sm' onclick='cancelOrders(" +
+//                 order_details[0].order_id + ")'> Cancel order </button>";
+//             } else {
+//                 button = " <button class='btn btn-primary btn-sm disabled'> Cancel order </button>";
+//             }
 
-            for (j in order_details) {
-                sellername = await getSeller(order_details[0].sellerID)
-                var imgFileName = "static/images/" + order_details[j].order_item_id + "-1.jpeg";
+//             for (j in order_details) {
+//                 sellername = await getSeller(order_details[0].sellerID)
+//                 var imgFileName = "static/images/" + order_details[j].order_item_id + "-1.jpeg";
 
-                eachRow = "<td> <img style='height: 100px' src=" + imgFileName +"> " + 
-                            order_details[j].productName + "</td>" +
-                            "<td>" + order_details[j].quantity + "</td>" +
-                            "<td>" + sellername + "</td>";
+//                 eachRow = "<td> <img style='height: 100px' src=" + imgFileName +"> " +
+//                             order_details[j].productName + "</td>" +
+//                             "<td>" + order_details[j].quantity + "</td>" +
+//                             "<td>" + sellername + "</td>";
 
-                if (j == 0) {
-                    eachRow += "<td id='orderstatus' rowspan=" + orders_length +">" + order.status  + "</td>"+ 
-                                "<td rowspan=" + orders_length +">" + button + "</td>";
-                } 
+//                 if (j == 0) {
+//                     eachRow += "<td id='orderstatus' rowspan=" + orders_length +">" + order.status  + "</td>"+
+//                                 "<td rowspan=" + orders_length +">" + button + "</td>";
+//                 }
 
-                rows += eachRow + "</tr>";
+//                 rows += eachRow + "</tr>";
 
-            } 
+//             }
         
-            $('#orderTable').append(rows);
+//             $('#orderTable').append(rows);
 
-        } 
-    } else if (orderResponse.status == 404) {
+//         }
+//     } else if (orderResponse.status == 404) {
 
-        showError(orders.message);
+//         showError(orders.message);
 
-    } else {
+//     } else {
 
-        message = "Something went wrong while retrieving orders, please try again later."
-        showError(message);
+//         message = "Something went wrong while retrieving orders, please try again later."
+//         showError(message);
 
-    }
-}
+//     }
+// }
 
 async function getSeller(sellerID) {
     

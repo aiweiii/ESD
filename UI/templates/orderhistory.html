@@ -38,12 +38,61 @@
                         <th scope="col">Order Status</th>
                     </tr>
                 </thead>
+                <!-- Older Order -->
                 <tbody>
                     <tr>
-                    
+                        <td rowspan="2">1</td>
+                        <td><img style="height: 100px;" src="static/images/4-1.jpeg" alt="">Face Towel</td>
+                        <td>7</td>
+                        <td>Liqing</td>
+                        <td rowspan="2">
+                            <button class="btn btn-primary btn-sm" id="failedBtn">Cancel Order</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><img style="height: 100px;" src="static/images/5-1.jpeg" alt="">Ottoman</td>
+                        <td>3</td>
+                        <td>Liqing</td>
+                    </tr>
+                </tbody>
+
+                <!-- Newer Order -->
+                <tbody>
+                    <tr>
+                        <td rowspan="2">2</td>
+                        <td><img style="height: 100px;" src="static/images/1-1.jpeg" alt="">WOMEN Pocketable UV Protection Parka</td>
+                        <td>1</td>
+                        <td>Maars</td>
+                        <td rowspan="2">
+                            <button class="btn btn-primary btn-sm" id="successBtn">Cancel Order</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><img style="height: 100px;" src="static/images/2-1.jpeg" alt="">MEN Smooth Jersey AIRISM Lined Parka</td>
+                        <td>5</td>
+                        <td>Maars</td>
                     </tr>
                 </tbody>
               </table>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -54,6 +103,7 @@
         crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='order.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='app.js')}}"></script>
     <script type="text/javascript">
         getCust("{{user}}");
     </script>
