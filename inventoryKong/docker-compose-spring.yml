@@ -1,0 +1,67 @@
+version: '3'
+#platform: linux/x86_64
+services:
+  project-mysql:
+    restart: always
+    # platform: linux/x86_64
+    # image: mysql:latest
+    image: mariadb:10.5.8
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=inventory
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user
+  #    mem_limit: 512m
+  #    mem_reservation: 512m
+  inventory_webapp:
+    restart: always
+    #    image: pokemon:0.0.1-SNAPSHOT
+    image: maars505/springinventory:CRUD2
+    depends_on:
+      - project-mysql
+    ports:
+      - 7070:8080
+    environment:
+      - DATABASE_HOST=project-mysql
+      - DATABASE_USER=user
+      - DATABASE_PASSWORD=user
+      - DATABASE_NAME=inventory
+      - DATABASE_PORT=3306
+    mem_limit: 750m
+    mem_reservation: 700m
+
+  # inventory_webapp2:
+  #   restart: always
+  #   #    image: pokemon:0.0.1-SNAPSHOT
+  #   image: maars505/springinventory:CRUD
+  #   depends_on:
+  #     - docker-mysql
+  #   ports:
+  #     - 6060:8080
+  #   environment:
+  #     - DATABASE_HOST=docker-mysql
+  #     - DATABASE_USER=user
+  #     - DATABASE_PASSWORD=Ilovespring!
+  #     - DATABASE_NAME=inventory
+  #     - DATABASE_PORT=3306
+  #   mem_limit: 750m
+  #   mem_reservation: 700m
+
+#  inventory_webapp2:
+#    restart: always
+#    #    image: pokemon:0.0.1-SNAPSHOT
+#    image: maars505/springinventory:CRUD2
+#    depends_on:
+#      - docker-mysql
+#    ports:
+#      - 9090:8080
+#    environment:
+#      - DATABASE_HOST=docker-mysql
+#      - DATABASE_USER=user
+#      - DATABASE_PASSWORD=Ilovespring!
+#      - DATABASE_NAME=inventory2
+#      - DATABASE_PORT=3306
+#    mem_limit: 750m
+#    mem_reservation: 700m
+
+
